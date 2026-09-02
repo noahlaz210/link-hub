@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" class="no-js">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -24,8 +24,8 @@
   <meta property="og:description" content="Montage de clips, formats courts verticaux et longs formats. Réalisations, offre et contact.">
   <!-- Idéalement une image différente de celle du hub : une frame de tes montages. -->
   <meta property="og:image" content="https://4restdump.vercel.app/assets/og-montage.png">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
+  <meta property="og:image:width" content="600">
+  <meta property="og:image:height" content="315">
   <meta property="og:image:alt" content="Montage vidéo et clipping par Forrest The Dump">
 
   <!-- Twitter / X -->
@@ -45,12 +45,17 @@
 <!-- data-page indique à links.js quelle page rendre. Ne pas modifier. -->
 <body data-page="montage">
 
+  <a class="skip" href="#main">Aller au contenu</a>
+
+  <!-- Barre haute translucide : remplie par links.js. -->
+  <header class="topbar" id="topbar"></header>
+
   <noscript>
     <p class="noscript">Ce site a besoin de JavaScript pour afficher son contenu.</p>
   </noscript>
 
   <!-- Emplacements vides : tout le contenu vient de SITE.montage dans links.js. -->
-  <main class="wrap wrap--wide">
+  <main class="wrap wrap--wide" id="main">
     <header class="montage-header" id="montage-header"></header>
 
     <section class="section" id="services"></section>

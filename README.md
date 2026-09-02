@@ -57,6 +57,41 @@ projects: {
 
 Pour retirer un projet : supprime son bloc. Rien d'autre à toucher.
 
+### Un projet pas encore en ligne
+
+Laisse son `href` vide (`href: ""`). La carte reste affichée, mais elle n'est
+plus cliquable et porte une étiquette **« Bientôt »** au lieu d'un lien mort.
+Dès que tu colles une URL, elle redevient un lien normale sans rien changer
+d'autre. Le champ `tag` (`"iOS · SwiftUI"`, `"Web"`, `"Outil"`…) s'affiche en
+petit sous la description ; laisse-le vide si tu n'en veux pas.
+
+### La pastille « dispo » sous ton nom
+
+```js
+status: {
+  show: true,
+  label: "Dispo pour de nouveaux projets",
+},
+```
+
+Passe `show` à `false` quand tu es complet. Une disponibilité affichée en
+permanence finit par ne plus rien vouloir dire — et un client qui écrit à
+quelqu'un d'indisponible n'écrit qu'une fois.
+
+### Les icônes des réseaux
+
+Chaque entrée de `socials` accepte deux champs en plus : `icon` et `handle`.
+
+| `icon` | rend |
+|---|---|
+| `"youtube"`, `"instagram"`, `"tiktok"`, `"github"` | le logo du réseau |
+| `"mail"`, `"link"` | une enveloppe, un maillon |
+
+Les icônes sont dessinées dans `links.js`, en SVG : rien n'est téléchargé, et
+elles prennent automatiquement la couleur du texte autour d'elles. `handle`
+(`"@4restdump_"`) s'affiche sous la description — c'est souvent ce à quoi les
+gens te reconnaissent, plus qu'au nom du réseau.
+
 ### Remplir les réalisations (page montage)
 
 Le tableau `montage.works.items` contient quatre emplacements. Chacun a un `kind` :
@@ -79,6 +114,11 @@ libellé « Voir sur Instagram » s'affiche — ça fonctionne aussi.
 Tu peux mettre plus ou moins de quatre réalisations : ajoute ou retire des blocs,
 la grille s'adapte.
 
+Tant que tu remplis la page, les emplacements vides restent visibles en
+pointillés pour que tu voies ce qu'il te reste à faire. **Avant d'envoyer le
+lien à un client, passe `showEmptySlots` à `false`** dans `montage.works` : les
+cadres vides disparaissent, et il ne reste que les réalisations réelles.
+
 ### Ton avatar sur le hub
 
 Le hub démarre sans photo. Dépose ton image dans `assets/avatar.png` puis, dans
@@ -90,6 +130,15 @@ Le hub démarre sans photo. Dépose ton image dans `assets/avatar.png` puis, dan
 l'adresse que tu acceptes de rendre publique. C'est un `mailto:`, donc l'adresse
 sera visible dans le code source de la page — utilise une adresse dédiée si tu
 préfères garder ta boîte principale à l'abri.
+
+**C'est la seule chose vraiment obligatoire avant de partager le lien.**
+
+À côté du bouton `mailto:`, la page affiche un bouton **« Copier l'adresse »**.
+Il sert sur mobile, où `mailto:` ouvre parfois une application que personne
+n'utilise. Ses deux libellés se règlent dans `copyLabel` et `copiedLabel`.
+
+La barre haute de la page montage se règle dans `montage.topbar` : le nom
+affiché, le lien de retour et le libellé du bouton de contact.
 
 ### La seule chose qui n'est PAS dans links.js
 
@@ -201,6 +250,30 @@ principale.
 `https://4restdump.vercel.app` par ton domaine réel, dans `canonical`, `og:url` et les
 URL d'images de partage. Tant que tu ne l'as pas fait, l'aperçu du lien partagé
 pointera vers un domaine d'exemple.
+
+---
+
+## 4. Ce que le site fait tout seul
+
+Rien de tout ça n'est à configurer, mais autant savoir que ça existe.
+
+- **Les cartes suivent le curseur.** Un halo se déplace sous la souris, et
+  s'éteint tout seul sur un écran tactile — aucun calcul n'est fait pour rien.
+- **Les blocs arrivent quand ils entrent à l'écran**, décalés de 45 ms les uns
+  sur les autres. Le contenu est déjà là, déjà lisible, déjà cliquable : c'est
+  purement décoratif.
+- **Les animations sont des ressorts**, décrits par deux réglages —
+  l'amortissement et la réponse — plutôt que par une durée. Ils sont écrits en
+  CSS (`linear()`) et tournent hors du fil principal : aucune librairie.
+- **Le passage d'une page à l'autre est enchaîné** (View Transitions) : ton nom
+  glisse du hub vers la barre de la page montage au lieu de disparaître. Là où
+  le navigateur ne connaît pas encore l'API, la navigation reste celle d'avant.
+- **Trois réglages système sont respectés** : « réduire les animations »
+  (tout devient un fondu court), « réduire la transparence » (la barre haute
+  devient opaque) et « contraste élevé » (les filets se renforcent, les halos
+  s'éteignent).
+- **Sans JavaScript**, le texte reste visible : rien n'est caché en attendant
+  une animation.
 
 ---
 
