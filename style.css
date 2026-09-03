@@ -591,6 +591,21 @@ button {
   height: 19px;
 }
 
+/* Un logo d'app apporte son propre fond : on retire celui du carré, on garde
+   le filet — sans lui, une icône à fond noir se dissout dans la carte. */
+.card__icon--logo {
+  background: none;
+  overflow: hidden;
+  padding: 0;
+}
+
+.card__icon--logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+}
+
 .card__chevron {
   flex: none;
   color: var(--text-3);

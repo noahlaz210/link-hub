@@ -86,15 +86,41 @@ const SITE = {
      Un projet sans href reste affiché, mais en carte non cliquable avec une
      étiquette « Bientôt » : ça a l'air voulu, alors qu'un lien mort a l'air
      cassé. Dès que tu colles une URL, la carte devient cliquable toute seule.
+
+     `logo` prend le chemin d'une image dans assets/logos/ : l'icône de l'app
+     s'affiche alors à la place du carré vide, avec son propre fond. Sans
+     logo, la carte reste alignée avec les autres — rien ne se décale.
      ------------------------------------------------------------------------ */
   projects: {
     title: "Projets",
     items: [
       {
-        title: "TerraTrails",
-        description: "Randonnées hors des sentiers battus : itinéraires, dénivelé, hors-ligne.", // TODO : ma proposition, corrige si ce n'est pas ça.
+        title: "Kura",
+        description: "Découverte sociale par affinités culturelles : cinéma et musique.",
         tag: "iOS · SwiftUI",
-        href: "", // TODO : URL du projet (site, App Store ou dépôt GitHub).
+        logo: "assets/logos/kura.png",
+        href: "https://thekura.netlify.app/",
+      },
+      {
+        title: "TerraTrails",
+        description: "Décrire, générer, partir : l'itinéraire de rando se construit à partir de ta description.",
+        tag: "iOS · SwiftUI",
+        logo: "assets/logos/terratrails.png",
+        href: "", // TODO : le site existe en local, colle son URL quand il est en ligne.
+      },
+      {
+        title: "Bloked",
+        description: "Tu déclares tes tâches la veille ; le lendemain, tes applis restent bloquées jusqu'à ce que tu les coches.",
+        tag: "iOS",
+        logo: "assets/logos/bloked.png",
+        href: "", // TODO
+      },
+      {
+        title: "Mention",
+        description: "Moyennes, paliers et projections : la mention que tu peux viser, calculée à l'avance.",
+        tag: "iOS",
+        logo: "assets/logos/mention.png",
+        href: "", // TODO
       },
       {
         title: "City Explorer",
@@ -106,12 +132,6 @@ const SITE = {
         title: "WikiMusic",
         description: "Chercher un artiste, remonter sa discographie, ouvrir le morceau.", // TODO
         tag: "Web",
-        href: "", // TODO
-      },
-      {
-        title: "Kult",
-        description: "Une ligne de description à écrire — c'est le seul projet que je ne connais pas.", // TODO
-        tag: "",
         href: "", // TODO
       },
       {
@@ -235,11 +255,9 @@ const SITE = {
       description:
         "Dis-moi le format, la durée et la deadline, je te réponds avec un prix et un délai.",
       email: {
-        // TODO — LA SEULE CHOSE À CHANGER AVANT DE PARTAGER LE LIEN.
-        // Mets ici l'adresse que tu acceptes de rendre publique. C'est un
-        // mailto:, donc elle sera lisible dans le code source de la page :
-        // utilise une adresse dédiée plutôt que ta boîte principale.
-        address: "contact@exemple.com",
+        // Adresse publique, volontairement dédiée : elle est lisible dans le
+        // code source de la page, comme toute adresse en mailto:.
+        address: "contact@4restdump.com",
         subject: "Projet de montage — Forrest The Dump", // pré-rempli dans le mail
         label: "M'écrire par e-mail",
         // Le bouton « copier » à côté : pratique sur mobile, où mailto: ouvre
@@ -411,7 +429,24 @@ const SITE = {
     if (href) link(node, href, item.external);
     else node.classList.add("is-placeholder");
 
-    if (item.icon) {
+    // Le logo d'une app passe avant l'icône générique : c'est le vrai signe
+    // de reconnaissance. Si le fichier manque, le carré disparaît au lieu
+    // d'afficher une image cassée, et la carte reste alignée sur les autres.
+    if (item.logo) {
+      var frame = el("span", "card__icon card__icon--logo");
+      var shot = el("img");
+      shot.src = item.logo;
+      shot.alt = "";
+      shot.width = 38;
+      shot.height = 38;
+      shot.loading = "lazy";
+      shot.decoding = "async";
+      shot.addEventListener("error", function () {
+        frame.remove();
+      });
+      frame.appendChild(shot);
+      node.appendChild(frame);
+    } else if (item.icon) {
       var badge = el("span", "card__icon");
       var glyph = icon(item.icon);
       if (glyph) badge.appendChild(glyph);
