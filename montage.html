@@ -34,10 +34,14 @@
   <meta name="twitter:description" content="Montage de clips, formats courts verticaux et longs formats. Réalisations, offre et contact.">
   <meta name="twitter:image" content="https://4restdump.vercel.app/assets/og-montage.png">
 
-  <meta name="theme-color" content="#070907">
+  <meta name="theme-color" content="#dceeff">
 
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@500;700&display=swap">
 
   <link rel="stylesheet" href="style.css">
 </head>
@@ -47,23 +51,22 @@
 
   <a class="skip" href="#main">Aller au contenu</a>
 
-  <!-- Barre haute translucide : remplie par links.js. -->
-  <header class="topbar" id="topbar"></header>
-
   <noscript>
     <p class="noscript">Ce site a besoin de JavaScript pour afficher son contenu.</p>
   </noscript>
 
   <!-- Emplacements vides : tout le contenu vient de SITE.montage dans links.js. -->
-  <main class="wrap wrap--wide" id="main">
-    <header class="montage-header" id="montage-header"></header>
+  <div id="marquee"></div>
+  <header id="nav"></header>
 
-    <section class="section" id="services"></section>
-    <section class="section" id="works"></section>
-    <section class="section" id="contact"></section>
-
-    <nav class="back" id="back" aria-label="Navigation secondaire"></nav>
+  <main id="main">
+    <section id="hero"></section>
+    <section id="services"></section>
+    <section id="works"></section>
+    <section id="contact"></section>
   </main>
+
+  <footer id="footer"></footer>
 
   <script src="links.js" defer></script>
 </body>

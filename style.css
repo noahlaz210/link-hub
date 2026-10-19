@@ -1,130 +1,88 @@
 /* =============================================================================
    style.css — feuille de style unique des deux pages.
 
-   Le site tient sur un seul système : une échelle d'espacement, une échelle
-   de typo, une seule « surface » (le fond des cartes, blocs et boutons) et
-   un seul en-tête de section. Le hub et la page montage n'ont donc pas deux
-   apparences qui se ressemblent — ils partagent littéralement les mêmes règles.
+   Le site suit un système de « livre de stickers » : fond papier pastel,
+   typographie d'affichage énorme et écrasée, contour noir d'un pixel sur tout
+   ce qui est cliquable, et une palette de six couleurs vives utilisées comme
+   des autocollants — jamais comme un accent unique.
 
-   Mobile-first : tout est écrit pour 380 px de large, les media queries
-   n'élargissent qu'ensuite.
+   Trois règles tiennent tout le reste :
+     1. Le contour noir est le langage visuel, pas un repli faute de mieux.
+     2. Aucune ombre portée, aucun dégradé. Le relief vient des bandes de
+        couleur et des rubans.
+     3. Le bleu n'est jamais une couleur d'action. Les boutons sont noirs
+        pleins ou blancs cernés de noir.
 
-   Pour reteindre le site : une seule variable, --accent.
+   Mobile-first : tout est écrit pour 380 px, les media queries élargissent.
    ========================================================================== */
 
 :root {
-  /* --- Couleurs ---------------------------------------------------------
-     Le fond n'est pas un gris neutre : il tire très légèrement vers le vert,
-     ce qui fait respirer l'accent sans qu'on sache dire pourquoi. */
-  --bg: #070907;
-  --bg-deep: #050705;
-  --surface: #0e120f;
-  --surface-hi: #141a16;
+  /* --- Palette ----------------------------------------------------------
+     Deux neutres, trois fonds de section, six couleurs de sticker. */
+  --carbon: #000000;
+  --paper: #ffffff;
+  --sky: #dceeff;
+  --concrete: #cccccc;
+  --mist: #e9e9e9;
 
-  /* Les filets sont en blanc translucide, pas en gris opaque : ils réagissent
-     donc au fond sur lequel ils tombent, comme une vraie arête de matériau. */
-  --hairline: rgba(255, 255, 255, 0.07);
-  --hairline-hi: rgba(255, 255, 255, 0.14);
+  --blue: #4da2ff;      /* le ruban, et rien d'autre : jamais une action */
+  --mint: #55db9c;
+  --lavender: #e9ccff;
+  --ember: #fb4903;
+  --sunburst: #ffd731;
+  --violet: #5c4ade;
 
-  /* Trois niveaux de texte seulement. Au-delà, la hiérarchie se brouille.
-     Le gris secondaire est volontairement plus clair que le minimum
-     accessible : posé sur une surface translucide, un gris « juste » devient
-     illisible dès que le fond bouge. */
-  --text: #eceee9;
-  --text-2: #a4aca4;
-  --text-3: #767e77;
+  /* --- Typographie -------------------------------------------------------
+     Deux familles. L'affichage est un objet physique : interligne écrasé
+     (0,78) pour que les lignes se touchent et forment un bloc sculpté. */
+  --font-display: "Anton", "Haettenschweiler", "Arial Narrow Bold", sans-serif;
+  --font-ui: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
 
-  --accent: #9dd3a7;
-  --accent-ink: #06110a;
-  --accent-soft: rgba(157, 211, 167, 0.08);
-  --accent-line: rgba(157, 211, 167, 0.32);
-  --accent-line-hi: rgba(157, 211, 167, 0.6);
-  --accent-glow: rgba(157, 211, 167, 0.16);
+  --t-caption: 0.75rem;
+  --t-body: 0.9375rem;
+  --t-body-lg: 1.0625rem;
+  --t-subheading: 1.5rem;
+  --t-heading-sm: 1.875rem;
+  --t-heading: clamp(2.25rem, 1.4rem + 4vw, 4rem);
+  --t-display: clamp(3.25rem, 1rem + 15vw, 12.5rem);
+  --t-display-sm: clamp(2.5rem, 1rem + 9vw, 7rem);
 
-  /* --- Échelle d'espacement ---------------------------------------------
-     Toutes les marges du site sortent d'ici, et elles sont en rem : si tu
-     grossis la taille de texte du système, la mise en page grossit avec. */
+  --leading-display: 0.78;
+  --tracking-ui: -0.01em;
+  --tracking-label: 0.032em;
+
+  /* --- Espacement — base 4 px ------------------------------------------- */
   --s-1: 0.25rem;
   --s-2: 0.5rem;
   --s-3: 0.75rem;
   --s-4: 1rem;
-  --s-5: 1.5rem;
-  --s-6: 2rem;
-  --s-7: 3rem;
-  --s-8: 4rem;
-  --s-9: 5.5rem;
+  --s-5: 1.25rem;
+  --s-6: 1.5rem;
+  --s-8: 2rem;
+  --s-10: 2.5rem;
+  --s-12: 3rem;
+  --s-16: 4rem;
+  --s-20: 5rem;
+  --s-28: 7rem;
 
-  /* --- Échelle typographique --------------------------------------------
-     Les tailles qui portent le regard sont fluides (clamp) : elles suivent la
-     largeur de l'écran au lieu de sauter d'un palier à l'autre. */
-  --t-micro: 0.6875rem;  /* surtitres, labels, puces */
-  --t-small: 0.8125rem;  /* légendes, pied de page */
-  --t-body: 0.9375rem;   /* descriptions */
-  --t-base: 1.0625rem;   /* titres de carte */
-  --t-lead: clamp(1.0625rem, 1rem + 0.35vw, 1.1875rem);   /* chapô */
-  --t-name: clamp(1.75rem, 1.3rem + 2.2vw, 2.5rem);       /* nom sur le hub */
-  --t-display: clamp(2rem, 1.4rem + 3vw, 3.125rem);       /* titre montage */
+  /* --- Formes ------------------------------------------------------------
+     Les pilules sont réellement à 1600 px : au-delà de la moitié de la
+     hauteur, le rayon sature, et la valeur reste juste quelle que soit la
+     taille du bouton. */
+  --r-pill: 1600px;
+  --r-card: 20px;
+  --r-card-lg: 40px;
+  --r-sticker: 16px;
+  --r-body: 30px;
 
-  /* Le tracking dépend de la taille, jamais l'inverse : plus les lettres
-     grossissent, plus l'œil les voit espacées, donc plus on les resserre.
-     Un letter-spacing unique pour tout le site serait faux quelque part. */
-  --track-display: -0.03em;
-  --track-name: -0.025em;
-  --track-title: -0.01em;
-  --track-label: 0.16em;
-
-  /* --- Formes ------------------------------------------------------------ */
-  --radius: 16px;
-  --radius-lg: 22px;
-  --radius-sm: 10px;
-  --radius-pill: 999px;
-  --border: 1px solid var(--hairline);
+  --line: 1px solid var(--carbon);
+  --line-thick: 2px solid var(--carbon);
 
   /* --- Largeurs ---------------------------------------------------------- */
-  --screen-margin: 20px;
-  --hub-width: 620px;
-  --page-width: 900px;
-
-  /* --- Mouvement ---------------------------------------------------------
-     Deux ressorts, générés depuis les deux paramètres qu'Apple utilise à la
-     place de la triplette masse/raideur/amortissement :
-
-       amortissement (damping) — 1.0 = aucun dépassement, en dessous ça rebondit
-       réponse (response)      — en combien de temps la valeur rejoint sa cible
-
-     `linear()` fait tourner la courbe complète dans le compositeur : c'est un
-     vrai ressort, sans une ligne de JavaScript et sans librairie. */
-
-  /* amortissement 1.0, réponse 0.3 — le défaut, il ne dépasse jamais */
-  --spring: linear(0, 0.0326, 0.1088, 0.2055, 0.3081, 0.408, 0.5003, 0.5828,
-    0.6549, 0.7166, 0.7687, 0.8123, 0.8484, 0.878, 0.9023, 0.9219, 0.9378,
-    0.9506, 0.9608, 0.969, 0.9755, 0.9807, 0.9848, 0.9881, 0.9907, 0.9927,
-    0.9943, 0.9955, 0.9965, 0.9973, 0.9979, 0.9983, 0.9987, 1);
-  --spring-dur: 440ms;
-
-  /* amortissement 0.8, réponse 0.35 — il dépasse un peu. Réservé aux gestes
-     qui portaient déjà de l'élan : une validation, un retour de pression. */
-  --spring-bounce: linear(0, 0.0288, 0.1004, 0.1963, 0.3033, 0.4117, 0.5153,
-    0.6101, 0.694, 0.7661, 0.8264, 0.8758, 0.9152, 0.9459, 0.9692, 0.9862,
-    0.9983, 1.0064, 1.0114, 1.0141, 1.0151, 1.015, 1.0141, 1.0127, 1.0111,
-    1.0095, 1.0079, 1.0064, 1.0051, 1.0039, 1.0029, 1.0021, 1.0015, 1);
-  --spring-bounce-dur: 470ms;
-
-  /* Pour tout ce qui est trop petit pour mériter un ressort : survol,
-     couleur, pression. Une courbe sortante franche, jamais `ease-in` —
-     `ease-in` démarre lentement, c'est-à-dire pile au moment où l'œil
-     regarde, et l'interface paraît molle. */
-  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
-  --fast: 130ms;
-  --hover: 200ms;
-
-  /* Police système uniquement : aucun fichier à télécharger, rien qui
-     clignote au premier affichage. Elle embarque déjà son propre réglage
-     optique, ses tables de tracking et ses corrections de lisibilité. */
-  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
-    Arial, "Apple Color Emoji", "Segoe UI Emoji", sans-serif;
-
-  color-scheme: dark;
+  --page: 1440px;
+  --margin: 20px;
+  --prose: 46ch;
 }
 
 /* =============================================================================
@@ -139,40 +97,34 @@
 
 html {
   -webkit-text-size-adjust: 100%;
-  scroll-behavior: smooth;
 }
 
 body {
   margin: 0;
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--font);
+  background: var(--paper);
+  color: var(--carbon);
+  font-family: var(--font-ui);
   font-size: 16px;
-  line-height: 1.55;
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: var(--tracking-ui);
+  font-feature-settings: "ss01" on, "tnum";
   -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-  font-optical-sizing: auto;
-  /* Deux voiles superposés au lieu d'un seul : un halo d'accent en haut, et
-     un fond légèrement plus sombre en bas. La page a un haut et un bas, elle
-     ne flotte pas dans le vide. C'est la seule fantaisie du design, et elle
-     est identique sur les deux pages — c'est ce qui les fait appartenir au
-     même site avant même qu'on lise quoi que ce soit. */
-  background-image:
-    radial-gradient(120% 55% at 50% -8%, var(--accent-soft) 0%, transparent 62%),
-    radial-gradient(100% 60% at 50% 120%, var(--bg-deep) 0%, transparent 70%);
-  background-repeat: no-repeat;
+  overflow-x: hidden;
 }
 
-img {
-  max-width: 100%;
+img,
+svg {
   display: block;
+  max-width: 100%;
 }
 
 h1,
 h2,
 h3,
 p,
-ul {
+ul,
+figure {
   margin: 0;
 }
 
@@ -186,17 +138,9 @@ a {
   text-decoration: none;
 }
 
-/* Un SVG sans width ni height mesure 300 px : toutes les icônes du site
-   passent donc par cette règle, et elles suivent la taille du texte qui les
-   entoure au lieu d'une valeur en dur. */
-.icon {
-  flex: none;
-  width: 1.15em;
-  height: 1.15em;
-}
-
 button {
   font: inherit;
+  letter-spacing: inherit;
   color: inherit;
   background: none;
   border: 0;
@@ -205,24 +149,22 @@ button {
 }
 
 :focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
-  border-radius: 8px;
+  outline: 3px solid var(--violet);
+  outline-offset: 2px;
 }
 
-/* Lien d'évitement : premier élément focusable de la page, invisible tant
-   qu'on ne tabule pas dessus. */
 .skip {
   position: absolute;
+  top: var(--s-2);
   left: var(--s-4);
-  top: var(--s-4);
-  z-index: 50;
+  z-index: 60;
   padding: var(--s-2) var(--s-4);
-  border-radius: var(--radius-pill);
-  background: var(--surface-hi);
-  border: 1px solid var(--hairline-hi);
-  font-size: var(--t-small);
-  transform: translateY(-200%);
+  background: var(--paper);
+  border: var(--line);
+  border-radius: var(--r-pill);
+  font-size: var(--t-caption);
+  font-weight: 700;
+  transform: translateY(-250%);
 }
 
 .skip:focus-visible {
@@ -230,662 +172,347 @@ button {
 }
 
 /* =============================================================================
-   TRANSITION ENTRE LES DEUX PAGES
+   BANDEAU DÉROULANT
    -----------------------------------------------------------------------------
-   L'accueil et la page montage sont deux documents. L'API View Transitions les
-   enchaîne quand même : le fond se fond au lieu de clignoter en blanc, et le
-   nom « Forrest The Dump » se déplace d'une page à l'autre au lieu de
-   disparaître ici pour réapparaître là. Là où l'API n'existe pas, la
-   navigation reste exactement celle d'avant.
+   Pleine largeur, collé au bord, sans marge intérieure. C'est le seul élément
+   animé du site : le reste se lit comme un collage imprimé.
    ========================================================================== */
 
-@view-transition {
-  navigation: auto;
+.marquee {
+  background: var(--carbon);
+  color: var(--paper);
+  overflow: hidden;
+  padding: var(--s-2) 0;
+  border-bottom: var(--line);
 }
 
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation-duration: 260ms;
-  animation-timing-function: var(--ease-out);
-}
-
-/* =============================================================================
-   CONTENANTS — mêmes marges verticales sur les deux pages
-   ========================================================================== */
-
-.wrap {
-  width: 100%;
-  max-width: var(--hub-width);
-  margin: 0 auto;
-  padding: var(--s-8) var(--screen-margin) var(--s-7);
-}
-
-.wrap--wide {
-  max-width: var(--page-width);
-}
-
-.noscript {
-  max-width: var(--hub-width);
-  margin: 0 auto;
-  padding: var(--s-4) var(--screen-margin) 0;
-  color: var(--text-2);
-  font-size: var(--t-body);
-}
-
-/* =============================================================================
-   SURFACE PARTAGÉE
-   -----------------------------------------------------------------------------
-   Le cœur de l'unification. Les liens du hub (.card), les blocs d'offre
-   (.block), les boutons de contact (.btn) et les cadres de réalisation
-   (.work__media) sont TOUS la même surface : même fond, même bordure, même
-   rayon, même réaction au survol. Ce qui change entre eux, c'est uniquement
-   le contenu et le padding.
-
-   Le fond n'est pas une couleur plate : un dégradé très court en haut, plus
-   un filet clair en incrustation sur la première ligne de pixels. C'est ce
-   que fait la lumière quand elle accroche l'arête d'un objet réel — et c'est
-   ce qui sépare une carte d'un simple rectangle plus clair.
-   ========================================================================== */
-
-.card,
-.block,
-.btn,
-.work__media,
-.panel {
-  position: relative;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.01) 45%,
-      rgba(255, 255, 255, 0) 100%),
-    var(--surface);
-  border: var(--border);
-  border-radius: var(--radius);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    0 1px 2px rgba(0, 0, 0, 0.4);
-}
-
-/* Le halo qui suit le curseur. Les coordonnées arrivent de links.js dans
-   --mx / --my ; sans souris, --mx n'est jamais posé et la couche reste
-   transparente, donc rien ne tourne pour rien sur mobile. */
-.card::after,
-.block::after,
-.btn::after,
-.panel::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity var(--hover) ease;
-  background: radial-gradient(
-    240px circle at var(--mx, 50%) var(--my, 0%),
-    var(--accent-glow),
-    transparent 72%
-  );
-}
-
-/* Le survol est le même partout : la bordure s'éclaircit, le fond monte d'un
-   cran, le halo s'allume. Aucune ombre portée qui grossit, aucun déplacement
-   vertical — sur mobile ça ne servirait à rien, et sur desktop ça bouge le
-   texte qu'on est en train de lire. */
-@media (hover: hover) and (pointer: fine) {
-  .card:hover,
-  .btn:hover,
-  .panel:hover,
-  a.work__media:hover {
-    background-color: var(--surface-hi);
-    border-color: var(--hairline-hi);
-  }
-
-  .card:hover::after,
-  .btn:hover::after,
-  a.work__media:hover::after {
-    opacity: 1;
-  }
-}
-
-/* La pression : elle répond au doigt qui appuie, pas au doigt qui relâche.
-   130 ms, c'est en dessous du seuil où l'on perçoit un délai. */
-.card,
-.btn,
-.chip-btn {
-  transition:
-    transform var(--fast) var(--ease-out),
-    background-color var(--hover) ease,
-    border-color var(--hover) ease;
-}
-
-.card:active,
-.btn:active,
-.chip-btn:active {
-  transform: scale(0.985);
-}
-
-/* Un seul élément teinté par page : le lien mis en avant sur le hub, le
-   bouton e-mail sur la page montage. Même recette dans les deux cas. */
-.card--featured,
-.btn--accent {
-  background:
-    linear-gradient(180deg, rgba(157, 211, 167, 0.1), rgba(157, 211, 167, 0.02) 60%,
-      rgba(255, 255, 255, 0) 100%),
-    var(--surface);
-  border-color: var(--accent-line);
-  color: var(--accent);
-  box-shadow:
-    inset 0 1px 0 rgba(157, 211, 167, 0.14),
-    0 12px 30px -18px rgba(157, 211, 167, 0.5);
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .card--featured:hover,
-  .btn--accent:hover {
-    border-color: var(--accent-line-hi);
-    background-color: var(--surface);
-  }
-}
-
-/* =============================================================================
-   EN-TÊTE DE SECTION PARTAGÉ
-   -----------------------------------------------------------------------------
-   « RÉSEAUX » sur le hub et « RÉALISATIONS » sur la page montage sont le même
-   objet : mêmes capitales, même interlettrage, même filet.
-   ========================================================================== */
-
-.group__title,
-.section__title {
+.marquee__track {
   display: flex;
-  align-items: center;
-  gap: var(--s-3);
-  font-size: var(--t-micro);
-  font-weight: 600;
+  width: max-content;
+  gap: var(--s-6);
+  animation: slide 38s linear infinite;
+}
+
+.marquee__item {
+  font-size: var(--t-caption);
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: var(--track-label);
-  color: var(--text-3);
-  margin-bottom: var(--s-4);
+  letter-spacing: var(--tracking-label);
+  white-space: nowrap;
 }
 
-/* Le filet ne souligne pas le titre : il part du titre et file vers la marge.
-   Il sépare sans enfermer, et il indique dans quel sens la section se lit. */
-.group__title::after,
-.section__title::after {
-  content: "";
-  flex: 1;
-  height: 1px;
-  background: linear-gradient(90deg, var(--hairline), transparent);
-}
-
-.section__title {
-  margin-bottom: var(--s-5);
-}
-
-.section__desc {
-  margin-top: calc(var(--s-1) * -1);
-  margin-bottom: var(--s-5);
-  color: var(--text-2);
-  font-size: var(--t-body);
-  max-width: 52ch;
-  text-wrap: pretty;
+/* Le ruban est dupliqué dans links.js : on défile d'exactement une copie,
+   donc la boucle ne saute pas. */
+@keyframes slide {
+  to {
+    transform: translateX(calc(-50% - var(--s-3)));
+  }
 }
 
 /* =============================================================================
-   PAGE 1 — LE HUB
+   NAVIGATION
    ========================================================================== */
 
-.profile {
-  text-align: center;
-  margin-bottom: var(--s-7);
-}
-
-.avatar,
-.monogram {
-  width: 84px;
-  height: 84px;
-  border-radius: 50%;
-  margin: 0 auto var(--s-5);
-  border: var(--border);
-}
-
-.avatar {
-  object-fit: cover;
-}
-
-/* Sans photo, on n'affiche pas un trou : un monogramme, dessiné avec les
-   mêmes variables que le reste, posé dans un halo d'accent qui lui donne une
-   épaisseur au lieu de le laisser à plat sur le fond. */
-.monogram {
-  position: relative;
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
   display: flex;
   align-items: center;
-  justify-content: center;
-  background:
-    linear-gradient(180deg, rgba(157, 211, 167, 0.14), rgba(157, 211, 167, 0.02)),
-    var(--surface);
-  border-color: var(--accent-line);
-  color: var(--accent);
-  font-size: 1.625rem;
-  font-weight: 600;
-  letter-spacing: var(--track-name);
-  box-shadow:
-    inset 0 1px 0 rgba(157, 211, 167, 0.2),
-    0 0 44px -10px var(--accent-glow);
+  justify-content: space-between;
+  gap: var(--s-3);
+  padding: var(--s-3) var(--margin);
+  background: var(--paper);
+  border-bottom: var(--line);
 }
 
-.name {
-  font-size: var(--t-name);
-  font-weight: 600;
-  line-height: 1.08;
-  letter-spacing: var(--track-name);
-  text-wrap: balance;
-  /* Nommé pour la transition entre pages : le même nom existe dans la barre
-     de la page montage, le navigateur fait donc glisser l'un vers l'autre. */
-  view-transition-name: brand;
-}
-
-.tagline {
-  margin: var(--s-3) auto 0;
-  color: var(--text-2);
-  font-size: var(--t-lead);
-  line-height: 1.45;
-  max-width: 32ch;
-  text-wrap: pretty;
-}
-
-/* --- La pastille de disponibilité ---------------------------------------- */
-
-.status {
+.nav__brand {
   display: inline-flex;
   align-items: center;
   gap: var(--s-2);
-  margin-top: var(--s-5);
-  padding: 0.3rem 0.75rem 0.3rem 0.6rem;
-  border-radius: var(--radius-pill);
-  border: 1px solid var(--accent-line);
-  background: rgba(157, 211, 167, 0.06);
-  color: var(--accent);
-  font-size: var(--t-micro);
-  font-weight: 600;
-  letter-spacing: 0.04em;
-}
-
-.status__dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 0 0 0 var(--accent-line-hi);
-  animation: pulse 2.6s var(--ease-out) infinite;
-}
-
-/* Une seule oscillation sur tout le site, et elle porte une information :
-   « je réponds ». Elle reste au-dessus de 0,2 Hz, le seuil en dessous duquel
-   une boucle lente devient pénible à regarder. */
-@keyframes pulse {
-  0%, 70%, 100% { box-shadow: 0 0 0 0 rgba(157, 211, 167, 0); }
-  35% { box-shadow: 0 0 0 5px rgba(157, 211, 167, 0.14); }
-}
-
-.group {
-  margin-top: var(--s-7);
-}
-
-.stack {
-  display: flex;
-  flex-direction: column;
-  gap: var(--s-3);
-}
-
-/* --- Le lien du hub ------------------------------------------------------ */
-
-.card {
-  display: flex;
-  align-items: center;
-  gap: var(--s-4);
-  padding: var(--s-4) var(--s-5);
-  overflow: hidden;
-}
-
-.card__body {
-  flex: 1;
-  min-width: 0;
-}
-
-.card__title {
-  display: block;
-  font-size: var(--t-base);
-  font-weight: 590;
-  letter-spacing: var(--track-title);
-}
-
-.card__desc {
-  display: block;
-  margin-top: 0.15rem;
-  color: var(--text-2);
+  font-weight: 700;
   font-size: var(--t-body);
-  line-height: 1.45;
-  text-wrap: pretty;
+  white-space: nowrap;
 }
 
-/* L'icône de gauche : un carré arrondi, pas un rond, pour ne pas concurrencer
-   le monogramme qui est le seul cercle de la page. */
-/* L'icône s'aligne sur la première ligne de texte, pas sur le centre du bloc :
-   sur une carte à trois lignes, une icône centrée flotte au milieu de nulle
-   part. Le chevron, lui, reste centré — c'est une cible, pas un repère. */
-.card__icon {
-  flex: none;
-  align-self: flex-start;
-  margin-top: 2px;
-  display: grid;
-  place-items: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 11px;
-  border: 1px solid var(--hairline);
-  background: rgba(255, 255, 255, 0.03);
-  color: var(--text-2);
-  transition: color var(--hover) ease, border-color var(--hover) ease;
-}
-
-.card__icon .icon {
-  width: 19px;
-  height: 19px;
-}
-
-/* Un logo d'app apporte son propre fond : on retire celui du carré, on garde
-   le filet — sans lui, une icône à fond noir se dissout dans la carte. */
-.card__icon--logo {
-  background: none;
-  overflow: hidden;
-  padding: 0;
-}
-
-.card__icon--logo img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: inherit;
-}
-
-.card__chevron {
-  flex: none;
-  color: var(--text-3);
-  font-size: 0.9375rem;
-  transition: color var(--hover) ease, transform var(--spring-dur) var(--spring);
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .card:hover .card__chevron {
-    color: var(--text);
-    transform: translateX(3px);
-  }
-
-  .card:hover .card__icon {
-    color: var(--accent);
-    border-color: var(--accent-line);
-  }
-}
-
-/* Le lien mis en avant : plus haut, avec un surtitre. C'est le seul endroit
-   du hub où l'on empile trois niveaux de texte, et c'est voulu — c'est la
-   page qui rapporte de l'argent. */
-.card--featured {
-  padding: var(--s-5);
-  border-radius: var(--radius-lg);
-}
-
-.card--featured .card__eyebrow {
-  display: block;
-  margin-bottom: var(--s-2);
-  font-size: var(--t-micro);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: var(--track-label);
-  color: var(--accent);
-  opacity: 0.75;
-}
-
-.card--featured .card__title {
-  font-size: var(--t-lead);
-  color: var(--accent);
-}
-
-.card--featured .card__desc {
-  color: var(--text-2);
-}
-
-/* La flèche du bouton principal est dans une pastille : elle ressemble à ce
-   qu'elle est, une cible sur laquelle on va appuyer. */
-.card--featured .card__chevron {
+/* Le badge rond du logo : un cercle cerné de noir, comme un sticker découpé. */
+.nav__mark {
   display: grid;
   place-items: center;
   width: 34px;
   height: 34px;
-  border-radius: 50%;
-  border: 1px solid var(--accent-line);
-  color: var(--accent);
+  border: var(--line);
+  border-radius: var(--r-pill);
+  background: var(--sunburst);
+  font-family: var(--font-display);
+  font-size: 1rem;
+  letter-spacing: 0.02em;
 }
 
+.nav__links {
+  display: none;
+  gap: var(--s-1);
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding: 0.6rem 0.9rem;
+  border: var(--line);
+  border-radius: var(--r-pill);
+  background: var(--paper);
+  font-size: var(--t-caption);
+  font-weight: 700;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: background-color 140ms ease, color 140ms ease;
+}
+
+.pill--filled {
+  background: var(--carbon);
+  color: var(--paper);
+}
+
+.pill--sun { background: var(--sunburst); }
+.pill--mint { background: var(--mint); }
+.pill--lavender { background: var(--lavender); }
+
 @media (hover: hover) and (pointer: fine) {
-  .card--featured:hover .card__chevron {
-    background: rgba(157, 211, 167, 0.1);
-    border-color: var(--accent-line-hi);
+  .pill:hover {
+    background: var(--carbon);
+    color: var(--paper);
+  }
+
+  .pill--filled:hover {
+    background: var(--paper);
+    color: var(--carbon);
   }
 }
 
-/* --- Réseaux : deux colonnes dès qu'il y a la place ----------------------- */
-
-.grid-2 {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--s-3);
-}
-
-.card__handle {
-  display: block;
-  margin-top: 0.15rem;
-  color: var(--text-3);
-  font-size: var(--t-small);
-}
-
-/* --- Projets -------------------------------------------------------------- */
-
-/* Un projet sans URL n'est pas un lien mort grisé : c'est une carte non
-   cliquable avec une étiquette « bientôt ». La différence est honnête, et
-   elle a l'air voulue au lieu d'avoir l'air cassée. */
-.card.is-placeholder {
-  cursor: default;
-  color: inherit;
-}
-
-.card.is-placeholder .card__title {
-  color: var(--text-2);
-}
-
-.card.is-placeholder:active {
-  transform: none;
-}
-
-.chip {
-  flex: none;
-  padding: 0.2rem 0.5rem;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--hairline);
-  background: rgba(255, 255, 255, 0.02);
-  color: var(--text-3);
-  font-size: var(--t-micro);
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  white-space: nowrap;
-}
-
-.card__meta {
-  display: flex;
-  align-items: center;
-  gap: var(--s-2);
-  margin-top: var(--s-2);
-}
-
-.card__tag {
-  color: var(--text-3);
-  font-size: var(--t-micro);
-  font-weight: 600;
-  letter-spacing: 0.04em;
-}
-
-.footer__text {
-  margin-top: var(--s-8);
-  padding-top: var(--s-5);
-  border-top: var(--border);
-  text-align: center;
-  color: var(--text-3);
-  font-size: var(--t-small);
-}
-
-.footer__note {
-  display: block;
-  margin-top: var(--s-1);
-  color: var(--text-3);
-  opacity: 0.7;
+.pill:active {
+  transform: translateY(1px);
 }
 
 /* =============================================================================
-   PAGE 2 — MONTAGE
+   BANDES DE SECTION
+   -----------------------------------------------------------------------------
+   Chaque section est une bande de couleur pleine largeur. Aucune bordure,
+   aucune ombre : c'est la couleur seule qui découpe la page.
    ========================================================================== */
 
-/* --- La barre haute ------------------------------------------------------
-   Une couche translucide posée SUR le contenu, qui défile dessous, plutôt
-   qu'un bandeau opaque qui mangerait une bande d'écran. Elle ne se dessine
-   un filet que lorsqu'elle chevauche vraiment le contenu (classe posée par
-   links.js) : pas de trait qui traîne en haut de page au chargement. */
-.topbar {
-  position: sticky;
-  top: 0;
-  z-index: 20;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--s-4);
-  padding: var(--s-3) var(--screen-margin);
-  background: rgba(7, 9, 7, 0.6);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border-bottom: 1px solid transparent;
-  transition: border-color var(--hover) ease, background-color var(--hover) ease;
+.band {
+  position: relative;
+  overflow: hidden;
+  padding: var(--s-16) var(--margin);
 }
 
-.topbar.is-stuck {
-  background: rgba(7, 9, 7, 0.72);
-  border-bottom-color: var(--hairline);
+.band--sky { background: var(--sky); }
+.band--paper { background: var(--paper); }
+.band--concrete { background: var(--concrete); }
+.band--carbon {
+  background: var(--carbon);
+  color: var(--paper);
 }
 
-.topbar__inner {
-  width: 100%;
-  max-width: var(--page-width);
+.band__inner {
+  position: relative;
+  z-index: 2;
+  max-width: var(--page);
   margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--s-4);
 }
 
-.topbar__brand {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--s-2);
-  font-size: var(--t-body);
-  font-weight: 590;
-  letter-spacing: var(--track-title);
-  color: var(--text);
-  /* Même nom que le titre du hub : les deux se remplacent en glissant. */
-  view-transition-name: brand;
-}
-
-.topbar__back {
-  color: var(--text-3);
-  transition: transform var(--spring-dur) var(--spring), color var(--hover) ease;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .topbar__brand:hover .topbar__back {
-    transform: translateX(-3px);
-    color: var(--text);
-  }
-}
-
-/* Le bouton de contact vit dans la barre : sur une page client, l'action
-   principale ne doit jamais être à plus d'un geste. */
-.chip-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--s-2);
-  padding: 0.4rem 0.85rem;
-  border-radius: var(--radius-pill);
-  border: 1px solid var(--accent-line);
-  background: rgba(157, 211, 167, 0.08);
-  color: var(--accent);
-  font-size: var(--t-small);
-  font-weight: 600;
-  white-space: nowrap;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .chip-btn:hover {
-    border-color: var(--accent-line-hi);
-    background: rgba(157, 211, 167, 0.14);
-  }
-}
-
-/* La largeur est en rem, pas en ch : `ch` se calcule sur la taille de police
-   de l'élément qui le porte — ici 16 px — et pas sur celle du grand titre
-   qu'il contient. En ch, ce bloc ferait 160 px de large. */
-.montage-header {
-  margin-bottom: var(--s-7);
-  max-width: 40rem;
-}
-
-.eyebrow {
-  display: inline-block;
-  font-size: var(--t-micro);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: var(--track-label);
-  color: var(--accent);
-  margin-bottom: var(--s-4);
-}
+/* =============================================================================
+   TYPOGRAPHIE D'AFFICHAGE
+   ========================================================================== */
 
 .display {
+  position: relative;
+  z-index: 2;
+  font-family: var(--font-display);
+  font-weight: 400;
   font-size: var(--t-display);
-  line-height: 1.06;
-  font-weight: 620;
-  letter-spacing: var(--track-display);
-  /* balance répartit les lignes d'un titre court au lieu de laisser un mot
-     seul sur la dernière — le navigateur fait le travail d'un typographe. */
-  text-wrap: balance;
-  max-width: 15em;
+  line-height: var(--leading-display);
+  letter-spacing: 0;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+  /* Un interligne à 0,78 coupe les accents des capitales françaises : É, À,
+     Ê passent au-dessus de la boîte de ligne. Ce retrait les rattrape sans
+     desserrer le bloc. */
+  padding-top: 0.12em;
+}
+
+.display__line {
+  display: block;
+}
+
+/* Voir le commentaire dans links.js : ce retrait ne s'applique qu'aux lignes
+   qui portent une capitale accentuée, pour ne pas desserrer le bloc ailleurs. */
+.display__line--accent {
+  padding-top: 0.22em;
+}
+
+.display--sm {
+  font-size: var(--t-display-sm);
+}
+
+.heading {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--t-heading);
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.tagline {
+  max-width: var(--prose);
+  font-size: var(--t-subheading);
+  font-weight: 500;
+  line-height: 1.25;
 }
 
 .lede {
-  margin-top: var(--s-4);
-  color: var(--text-2);
-  font-size: var(--t-lead);
-  line-height: 1.5;
-  max-width: 46ch;
-  text-wrap: pretty;
+  max-width: var(--prose);
+  font-size: var(--t-body-lg);
+  line-height: 1.45;
 }
 
-.hero-actions {
+.label {
+  display: inline-block;
+  font-size: var(--t-caption);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+}
+
+/* =============================================================================
+   LE RUBAN
+   -----------------------------------------------------------------------------
+   Le motif signature : un tube bleu qui passe DERRIÈRE le texte d'affichage.
+   Dessiné en SVG, à plat, avec un filet noir et un reflet plus clair — pas de
+   dégradé, le volume vient du tracé lui-même.
+   ========================================================================== */
+
+.ribbon {
+  position: absolute;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.display-wrap {
+  position: relative;
+  margin-bottom: var(--s-6);
+}
+
+.ribbon--hero {
+  top: 34%;
+  left: -14%;
+  width: 142%;
+  height: 58%;
+}
+
+.ribbon--low {
+  bottom: -12%;
+  right: -18%;
+  width: 90%;
+}
+
+/* =============================================================================
+   STICKERS
+   -----------------------------------------------------------------------------
+   Posés à la main, jamais alignés sur la grille, toujours un peu tournés.
+   ========================================================================== */
+
+.sticker {
+  position: absolute;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  border: var(--line);
+  border-radius: var(--r-sticker);
+  pointer-events: none;
+}
+
+.sticker svg {
+  width: 56%;
+  height: 56%;
+}
+
+.sticker--ember { background: var(--ember); color: var(--paper); }
+.sticker--sun { background: var(--sunburst); color: var(--carbon); }
+.sticker--mint { background: var(--mint); color: var(--carbon); }
+.sticker--violet { background: var(--violet); color: var(--paper); }
+.sticker--lavender { background: var(--lavender); color: var(--carbon); }
+
+/* =============================================================================
+   PAGE 1 — ACCUEIL
+   ========================================================================== */
+
+.hero {
+  padding-top: var(--s-12);
+  padding-bottom: var(--s-20);
+}
+
+.hero__display {
+  margin-bottom: 0;
+}
+
+.hero__actions {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--s-3);
-  margin-top: var(--s-6);
-  max-width: 46ch;
-}
-
-.section {
+  gap: var(--s-2);
   margin-top: var(--s-8);
 }
 
-/* --- Grilles : une colonne sur mobile, jamais plus ----------------------- */
+/* La pastille de disponibilité : un sticker en ligne, pas une décoration. */
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  margin-bottom: var(--s-5);
+  padding: 0.45rem 0.8rem;
+  border: var(--line);
+  border-radius: var(--r-pill);
+  background: var(--mint);
+  font-size: var(--t-caption);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+}
+
+.status__dot {
+  width: 8px;
+  height: 8px;
+  border: var(--line);
+  border-radius: var(--r-pill);
+  background: var(--paper);
+}
+
+/* --- La grande carte « montage » ----------------------------------------- */
+
+.feature {
+  display: grid;
+  gap: var(--s-6);
+  padding: var(--s-8) var(--s-6);
+  border: var(--line);
+  border-radius: var(--r-card-lg);
+  background: var(--paper);
+}
+
+.feature__title {
+  font-size: var(--t-display-sm);
+}
+
+.feature__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+
+/* --- Grille de projets ---------------------------------------------------- */
 
 .grid {
   display: grid;
@@ -893,403 +520,355 @@ button {
   gap: var(--s-4);
 }
 
-/* --- Blocs « Ce que je propose » ----------------------------------------- */
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  padding: var(--s-6);
+  border: var(--line);
+  border-radius: var(--r-card);
+  background: var(--paper);
+  transition: transform 140ms ease;
+}
 
-.block {
-  padding: var(--s-5);
+/* Les fonds tournent dans la palette : une carte sur deux porte une couleur,
+   et aucune couleur ne devient « la » couleur des projets. */
+.card--sky { background: var(--sky); }
+.card--mint { background: var(--mint); }
+.card--lavender { background: var(--lavender); }
+.card--sun { background: var(--sunburst); }
+.card--mist { background: var(--mist); }
+
+@media (hover: hover) and (pointer: fine) {
+  a.card:hover {
+    transform: translate(-2px, -2px);
+  }
+}
+
+a.card:active {
+  transform: translate(0, 1px);
+}
+
+.card__head {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+}
+
+.card__logo {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border: var(--line);
+  border-radius: 12px;
   overflow: hidden;
 }
 
-/* Le numéro d'ordre : il donne à trois blocs équivalents une lecture, un
-   début et une fin. Il est décoratif, donc masqué aux lecteurs d'écran. */
-.block__index {
-  display: block;
-  margin-bottom: var(--s-4);
-  font-size: var(--t-micro);
-  font-weight: 600;
-  letter-spacing: var(--track-label);
-  color: var(--accent);
-  opacity: 0.65;
+.card__logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-.block__title {
-  font-size: var(--t-base);
-  font-weight: 590;
-  letter-spacing: var(--track-title);
+.card__title {
+  font-family: var(--font-display);
+  font-size: var(--t-subheading);
+  line-height: 1;
+  text-transform: uppercase;
 }
 
-.block__desc {
-  margin-top: var(--s-2);
-  color: var(--text-2);
+.card__desc {
   font-size: var(--t-body);
-  text-wrap: pretty;
+  line-height: 1.4;
 }
 
-/* --- Grille « Réalisations » --------------------------------------------- */
+.card__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  margin-top: auto;
+  padding-top: var(--s-2);
+}
+
+.tag {
+  padding: 0.25rem 0.6rem;
+  border: var(--line);
+  border-radius: var(--r-pill);
+  background: var(--paper);
+  font-size: var(--t-caption);
+  font-weight: 700;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.card__arrow {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+}
+
+/* Un projet sans lien n'est pas un lien mort : c'est une carte, et elle le dit. */
+.card--soon .card__title {
+  opacity: 0.75;
+}
+
+/* =============================================================================
+   PAGE 2 — MONTAGE
+   ========================================================================== */
+
+.services {
+  display: grid;
+  gap: var(--s-4);
+  grid-template-columns: 1fr;
+}
+
+.service {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  padding: var(--s-6);
+  border: var(--line);
+  border-radius: var(--r-card);
+}
+
+.service__index {
+  font-family: var(--font-display);
+  font-size: var(--t-heading-sm);
+  line-height: 1;
+}
+
+.service__title {
+  font-family: var(--font-display);
+  font-size: var(--t-subheading);
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.service__desc {
+  font-size: var(--t-body);
+  line-height: 1.45;
+}
+
+.works {
+  display: grid;
+  gap: var(--s-5);
+  grid-template-columns: 1fr;
+}
 
 .work {
-  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
 }
 
 .work__media {
+  position: relative;
   display: block;
   aspect-ratio: 16 / 9;
   overflow: hidden;
+  border: var(--line);
+  border-radius: var(--r-card);
+  background: var(--paper);
+}
+
+.work__media--vertical {
+  aspect-ratio: 4 / 5;
 }
 
 .work__media iframe {
   width: 100%;
   height: 100%;
   border: 0;
-  display: block;
 }
 
-/* Les reels sont verticaux : cadre plus haut. */
-.work__media--link {
-  aspect-ratio: 4 / 5;
-}
-
-.work__thumb {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform var(--spring-dur) var(--spring);
-}
-
-@media (hover: hover) and (pointer: fine) {
-  a.work__media:hover .work__thumb {
-    transform: scale(1.03);
-  }
-}
-
-/* Pas de vignette fournie : cadre neutre, le libellé porte l'information. */
-.work__media--bare {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(160deg, var(--surface-hi), var(--surface));
+.work__empty {
+  display: grid;
+  place-items: center;
+  gap: var(--s-2);
+  background: var(--mist);
+  font-size: var(--t-caption);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
 }
 
 .work__badge {
   position: absolute;
   left: var(--s-3);
   bottom: var(--s-3);
-  padding: var(--s-2) var(--s-3);
-  font-size: var(--t-small);
-  font-weight: 590;
-  color: var(--text);
-  background: rgba(7, 9, 7, 0.66);
-  border: 1px solid var(--hairline-hi);
-  border-radius: var(--radius-pill);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-}
-
-.work__media--bare .work__badge {
-  position: static;
-  background: transparent;
-  border-color: var(--accent-line);
-  color: var(--accent);
-}
-
-.work__media--empty {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: var(--s-2);
-  border-style: dashed;
-  border-color: var(--hairline-hi);
-  background: none;
-  box-shadow: none;
-}
-
-.work__slot {
-  color: var(--text-3);
-  font-size: var(--t-small);
-}
-
-.work__caption {
-  margin-top: var(--s-3);
+  padding: 0.4rem 0.7rem;
+  border: var(--line);
+  border-radius: var(--r-pill);
+  background: var(--paper);
+  font-size: var(--t-caption);
+  font-weight: 700;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
 }
 
 .work__title {
-  display: block;
-  font-size: var(--t-body);
-  font-weight: 590;
-  letter-spacing: var(--track-title);
+  font-family: var(--font-display);
+  font-size: var(--t-subheading);
+  line-height: 1;
+  text-transform: uppercase;
 }
 
 .work__meta {
-  display: block;
-  margin-top: var(--s-1);
-  color: var(--text-3);
-  font-size: var(--t-small);
+  font-size: var(--t-caption);
+  font-weight: 700;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
 }
 
 /* --- Contact -------------------------------------------------------------- */
 
-.panel {
-  padding: var(--s-6) var(--s-5);
-  border-radius: var(--radius-lg);
-  text-align: center;
+.contact {
+  display: grid;
+  gap: var(--s-5);
+  padding: var(--s-10) var(--s-6);
+  border: var(--line);
+  border-radius: var(--r-card-lg);
+  background: var(--violet);
+  color: var(--paper);
 }
 
-.panel__title {
-  font-size: var(--t-lead);
-  font-weight: 600;
-  letter-spacing: var(--track-title);
+.contact .pill {
+  color: var(--carbon);
 }
 
-.panel__desc {
-  margin: var(--s-2) auto 0;
-  max-width: 42ch;
-  color: var(--text-2);
-  font-size: var(--t-body);
-  text-wrap: pretty;
-}
-
-.actions {
+.contact__actions {
   display: flex;
-  flex-direction: column;
-  gap: var(--s-3);
-  margin-top: var(--s-5);
-}
-
-.btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-wrap: wrap;
   gap: var(--s-2);
-  padding: var(--s-4) var(--s-5);
-  text-align: center;
-  font-size: var(--t-body);
-  font-weight: 590;
-  overflow: hidden;
 }
 
-/* Le bouton « copier l'adresse » change de libellé au succès. Le texte
-   traverse un flou très court : sans lui, on voit deux textes se croiser ;
-   avec, l'œil ne lit qu'un seul objet qui se transforme. */
-.btn__label {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--s-2);
-  text-wrap: balance;
-  transition: filter 180ms ease, opacity 180ms ease;
-}
-
-.btn.is-swapping .btn__label {
-  filter: blur(3px);
-  opacity: 0;
-}
-
-.btn.is-done {
-  border-color: var(--accent-line-hi);
-  animation: confirm var(--spring-bounce-dur) var(--spring-bounce);
-}
-
-/* Le seul dépassement du site : il ne sert qu'à confirmer une action réussie,
-   et il n'arrive qu'au moment où l'on vient d'appuyer. */
-@keyframes confirm {
-  from { transform: scale(0.97); }
-  to { transform: scale(1); }
-}
-
-/* --- Retour vers le hub --------------------------------------------------- */
-
-.back {
-  margin-top: var(--s-8);
-  padding-top: var(--s-5);
-  border-top: var(--border);
-  text-align: center;
-}
-
-.backlink {
-  display: inline-flex;
-  align-items: center;
-  white-space: nowrap;
-  gap: var(--s-2);
-  color: var(--text-3);
-  font-size: var(--t-body);
-  transition: color var(--hover) ease;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .backlink:hover {
-    color: var(--text);
-  }
+/* Le bouton « copier » confirme lui-même ce qu'il vient de faire. */
+.pill.is-done {
+  background: var(--mint);
+  color: var(--carbon);
 }
 
 /* =============================================================================
-   ENTRÉE EN SCÈNE
-   -----------------------------------------------------------------------------
-   Chaque bloc arrive une fois, quand il entre dans l'écran, décalé de 45 ms
-   sur son voisin. Le décalage est court exprès : au-delà, l'interface donne
-   l'impression de mettre du temps à s'ouvrir. Rien n'attend cette animation
-   pour être cliquable.
+   PIED DE PAGE
    ========================================================================== */
 
-.reveal {
-  opacity: 0;
-  transform: translateY(10px);
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-4);
+  padding: var(--s-8) var(--margin);
+  border-top: var(--line);
+  background: var(--paper);
+  font-size: var(--t-caption);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
 }
 
-.reveal.is-in {
-  opacity: 1;
-  transform: none;
-  transition:
-    opacity 360ms var(--ease-out) var(--reveal-delay, 0ms),
-    transform var(--spring-dur) var(--spring) var(--reveal-delay, 0ms);
-}
-
-/* Sans JavaScript, rien ne doit rester invisible. */
-.no-js .reveal {
-  opacity: 1;
-  transform: none;
+.noscript {
+  padding: var(--s-4) var(--margin);
+  background: var(--sunburst);
+  border-bottom: var(--line);
+  font-size: var(--t-body);
+  font-weight: 700;
 }
 
 /* =============================================================================
-   ÉLARGISSEMENTS — mobile d'abord, donc tout ce qui suit est du bonus.
+   ÉLARGISSEMENTS
    ========================================================================== */
 
-@media (min-width: 560px) {
+@media (min-width: 640px) {
   :root {
-    --screen-margin: 28px;
+    --margin: 32px;
   }
 
-  .wrap {
-    padding-top: var(--s-9);
+  .nav__links {
+    display: flex;
   }
 
-  .grid-2 {
+  .grid {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .grid--two {
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--s-5);
-    /* Une vidéo (16/9) et un reel (4/5) n'ont pas la même hauteur : chaque
-       légende doit rester collée à son propre média, pas s'aligner sur la
-       tuile la plus haute de la rangée. */
-    align-items: start;
-  }
-
-  .actions {
-    flex-direction: row;
-    justify-content: center;
-  }
-
-  .btn {
-    flex: 1 1 0;
-    max-width: 20rem;
-  }
-
-}
-
-@media (min-width: 760px) {
-  .grid--three {
+  .services {
     grid-template-columns: repeat(3, 1fr);
   }
 
-  .section {
-    margin-top: var(--s-9);
+  .works {
+    grid-template-columns: repeat(2, 1fr);
+    align-items: start;
   }
 
-  .panel {
-    padding: var(--s-7) var(--s-6);
+  .sticker {
+    width: 92px;
+    height: 92px;
+  }
+
+  .feature {
+    padding: var(--s-12);
+  }
+
+  .contact {
+    padding: var(--s-16) var(--s-12);
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --margin: 60px;
+  }
+
+  .band {
+    padding-top: var(--s-20);
+    padding-bottom: var(--s-20);
+  }
+
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .feature {
+    grid-template-columns: 1.4fr 1fr;
+    align-items: end;
   }
 }
 
 /* =============================================================================
    PRÉFÉRENCES SYSTÈME
-   -----------------------------------------------------------------------------
-   Trois réglages indépendants, à respecter séparément. « Moins de mouvement »
-   ne veut pas dire « aucun retour » : on garde ce qui aide à comprendre
-   (l'opacité, la couleur), on enlève ce qui déplace.
    ========================================================================== */
 
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
+  .marquee__track {
+    animation: none;
   }
 
   *,
   *::before,
   *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-
-  .reveal {
-    opacity: 1;
-    transform: none;
-  }
-
-  /* On garde un fondu très court : l'élément ne surgit pas, mais il ne
-     traverse pas l'écran non plus. */
-  .reveal.is-in {
-    transition: opacity 160ms ease;
-  }
-
-  ::view-transition-old(root),
-  ::view-transition-new(root) {
-    animation: none;
-  }
-
-  .card:active,
-  .btn:active,
-  .chip-btn:active {
-    transform: none;
-  }
 }
 
-/* Translucidité réduite : la barre haute devient un vrai bandeau opaque,
-   le flou coûteux disparaît. */
-@media (prefers-reduced-transparency: reduce) {
-  .topbar,
-  .topbar.is-stuck {
-    background: var(--bg);
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    border-bottom-color: var(--hairline);
-  }
-
-  .work__badge {
-    background: var(--bg);
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-  }
-}
-
-/* Contraste renforcé : filets nets, gris secondaires remontés, halos coupés. */
 @media (prefers-contrast: more) {
   :root {
-    --hairline: rgba(255, 255, 255, 0.24);
-    --hairline-hi: rgba(255, 255, 255, 0.4);
-    --text-2: #ccd2cc;
-    --text-3: #a9b0a9;
-  }
-
-  .card::after,
-  .block::after,
-  .btn::after,
-  .panel::after {
-    display: none;
+    --line: 2px solid var(--carbon);
+    --mist: #ffffff;
   }
 }
 
 @media print {
-  body {
-    background: #fff;
-    color: #000;
+  .marquee,
+  .nav,
+  .ribbon,
+  .sticker {
+    display: none;
   }
 
-  .topbar,
-  .card__chevron,
-  .status {
-    display: none;
+  .band {
+    background: #fff;
   }
 }

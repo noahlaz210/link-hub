@@ -9,96 +9,84 @@
    description> et Open Graph restent écrites dans les .html. Les robots de
    Facebook / X / iMessage / Discord ne lancent pas le JavaScript — une balise
    injectée par ce fichier serait invisible pour eux, donc l'aperçu du lien
-   partagé serait vide. Ces balises sont commentées dans chaque .html.
+   partagé serait vide.
    ========================================================================== */
 
 const SITE = {
   /* ---------------------------------------------------------------------------
-     1. IDENTITÉ (page d'accueil)
+     1. IDENTITÉ
      ------------------------------------------------------------------------ */
   profile: {
-    // Ton nom d'artiste, tel que les gens te connaissent.
     name: "Forrest The Dump",
-    // Une ligne, courte. Ce que tu fais, pas ton CV.
-    tagline: "Monteur vidéo & développeur — je monte des clips et je construis des apps.",
-    // La pastille sous le nom. Mets show à false quand tu es complet : une
-    // disponibilité affichée en permanence ne veut plus rien dire.
+    // Le nom éclaté en lignes pour le bloc d'affichage. Chaque entrée est une
+    // ligne : c'est toi qui décides où ça coupe, pas le navigateur.
+    displayLines: ["Forrest", "The", "Dump"],
+    tagline: "Je monte des clips et je construis des apps iOS.",
+    monogram: "4D",
     status: {
       show: true,
       label: "Dispo pour de nouveaux projets",
     },
-    // Affiché tant qu'aucune photo n'est fournie. Deux caractères maximum,
-    // sinon ça déborde du cercle.
-    monogram: "4D",
-    avatar: {
-      // Dépose ton image dans assets/ (carrée, 400x400 suffit), puis passe
-      // show à true. Tant que show vaut false, c'est le monogramme qui
-      // s'affiche — et aucune requête n'est faite.
-      show: false,
-      src: "assets/avatar.png",
-      alt: "Portrait de Forrest The Dump", // texte lu par les lecteurs d'écran
-    },
+  },
+
+  // Le bandeau noir qui défile tout en haut. Garde les entrées courtes.
+  marquee: [
+    "Montage vidéo",
+    "Clipping",
+    "Formats courts",
+    "Apps iOS",
+    "contact@4restdump.com",
+  ],
+
+  // La barre de navigation, identique sur les deux pages.
+  nav: {
+    homeHref: "index.html",
+    links: [
+      { label: "Projets", href: "index.html#projets" },
+      { label: "Montage", href: "montage.html" },
+    ],
+    cta: { label: "Me contacter", href: "montage.html#contact" },
   },
 
   /* ---------------------------------------------------------------------------
-     2. BOUTON MIS EN AVANT (page d'accueil)
-     Le seul bouton coloré de la page. Il envoie vers la page client.
+     2. RÉSEAUX
+     ------------------------------------------------------------------------ */
+  socials: [
+    { label: "YouTube", handle: "@throughmorpheus", href: "https://www.youtube.com/@throughmorpheus" },
+    { label: "Instagram", handle: "@4restdump_", href: "https://www.instagram.com/4restdump_/" },
+  ],
+
+  /* ---------------------------------------------------------------------------
+     3. LA CARTE MISE EN AVANT (accueil)
      ------------------------------------------------------------------------ */
   featured: {
-    eyebrow: "Travailler avec moi",
-    title: "Montage vidéo & clipping",
-    description: "Clips, formats courts, longs formats — voir mes réalisations et me contacter.",
+    label: "Travailler avec moi",
+    title: ["Montage", "vidéo"],
+    description:
+      "Clips, formats courts et longs formats pour des artistes et des créateurs. " +
+      "Tu m'envoies les rushes, je te rends un fichier prêt à publier.",
     href: "montage.html",
-    // Lien interne : pas de nouvel onglet.
-    external: false,
+    bullets: ["Clips", "Reels & Shorts", "YouTube"],
+    cta: "Voir la page montage",
   },
 
   /* ---------------------------------------------------------------------------
-     3. RÉSEAUX (page d'accueil)
-     icon : "youtube", "instagram", "tiktok", "github", "mail" ou "link".
-     handle : facultatif, mais c'est ce qui permet de te reconnaître.
-     ------------------------------------------------------------------------ */
-  socials: {
-    title: "Réseaux",
-    items: [
-      {
-        title: "YouTube",
-        description: "Mes vidéos et mes montages longs.",
-        handle: "@throughmorpheus",
-        icon: "youtube",
-        href: "https://www.youtube.com/@throughmorpheus",
-      },
-      {
-        title: "Instagram",
-        description: "Clips, formats verticaux, coulisses.",
-        handle: "@4restdump_",
-        icon: "instagram",
-        href: "https://www.instagram.com/4restdump_/",
-      },
-    ],
-  },
-
-  /* ---------------------------------------------------------------------------
-     4. PROJETS (page d'accueil)
-     Pour ajouter un projet : copie un bloc { } et complète-le.
-     Pour en retirer un : supprime son bloc. L'ordre du tableau = l'ordre affiché.
-
-     Un projet sans href reste affiché, mais en carte non cliquable avec une
-     étiquette « Bientôt » : ça a l'air voulu, alors qu'un lien mort a l'air
-     cassé. Dès que tu colles une URL, la carte devient cliquable toute seule.
-
-     `logo` prend le chemin d'une image dans assets/logos/ : l'icône de l'app
-     s'affiche alors à la place du carré vide, avec son propre fond. Sans
-     logo, la carte reste alignée avec les autres — rien ne se décale.
+     4. PROJETS
+     Un projet sans href reste affiché : carte non cliquable, étiquette
+     « Bientôt ». Dès que tu colles une URL, elle devient un lien.
+     `logo` prend une image dans assets/logos/, `color` une des cinq teintes
+     de carte : sky, mint, lavender, sun, mist.
      ------------------------------------------------------------------------ */
   projects: {
     title: "Projets",
+    intro: "Des apps iOS écrites en SwiftUI, de l'idée au TestFlight.",
     items: [
       {
         title: "Kura",
         description: "Découverte sociale par affinités culturelles : cinéma et musique.",
         tag: "iOS · SwiftUI",
         logo: "assets/logos/kura.png",
+        color: "lavender",
         href: "https://thekura.netlify.app/",
       },
       {
@@ -106,13 +94,15 @@ const SITE = {
         description: "Décrire, générer, partir : l'itinéraire de rando se construit à partir de ta description.",
         tag: "iOS · SwiftUI",
         logo: "assets/logos/terratrails.png",
-        href: "", // TODO : le site existe en local, colle son URL quand il est en ligne.
+        color: "mint",
+        href: "", // TODO : le site est prêt en local, colle son URL une fois en ligne.
       },
       {
         title: "Bloked",
         description: "Tu déclares tes tâches la veille ; le lendemain, tes applis restent bloquées jusqu'à ce que tu les coches.",
         tag: "iOS",
         logo: "assets/logos/bloked.png",
+        color: "sky",
         href: "", // TODO
       },
       {
@@ -120,186 +110,126 @@ const SITE = {
         description: "Moyennes, paliers et projections : la mention que tu peux viser, calculée à l'avance.",
         tag: "iOS",
         logo: "assets/logos/mention.png",
+        color: "sun",
         href: "", // TODO
       },
       {
-        title: "City Explorer",
-        description: "Découvrir une ville comme quelqu'un qui y habite, pas comme un touriste.", // TODO
+        title: "Manifest",
+        description: "Information collaborative sur les manifestations en France : carte, guides, compteur de foule et fiabilité affichée.",
+        tag: "iOS · SwiftUI",
+        color: "mist",
+        href: "", // TODO
+      },
+      {
+        title: "Uruk",
+        description: "Exploration urbaine et connexion sociale : découvrir sa ville autrement, et les gens qui y traînent.",
         tag: "iOS",
+        color: "lavender",
         href: "", // TODO
       },
       {
-        title: "WikiMusic",
-        description: "Chercher un artiste, remonter sa discographie, ouvrir le morceau.", // TODO
-        tag: "Web",
-        href: "", // TODO
-      },
-      {
-        title: "Weather",
-        description: "Application météo : l'essentiel en un écran, sans pub ni compte.", // TODO
+        title: "Wearther",
+        description: "Quoi mettre aujourd'hui : la météo croisée avec ton agenda et les endroits où tu dois aller.",
         tag: "iOS",
+        color: "sky",
         href: "", // TODO
       },
       {
-        title: "Clipo",
-        description: "Découper un long format en clips prêts à publier.", // TODO
-        tag: "Outil",
+        title: "Onyx",
+        description: "Finances perso : transactions, plan d'épargne et conseils avant un achat.",
+        tag: "iOS",
+        color: "mint",
         href: "", // TODO
       },
     ],
   },
 
   /* ---------------------------------------------------------------------------
-     5. PIED DE PAGE (page d'accueil)
+     5. PIED DE PAGE
      ------------------------------------------------------------------------ */
-  hubFooter: {
+  footer: {
     text: "© 2026 Forrest The Dump",
-    note: "Fait à la main. Aucun tracker, aucun cookie.",
+    note: "Fait à la main · aucun tracker",
   },
 
   /* ---------------------------------------------------------------------------
-     6. PAGE MONTAGE (montage.html)
+     6. PAGE MONTAGE
      ------------------------------------------------------------------------ */
   montage: {
-    // -- Barre haute, collée en haut pendant tout le défilement -------------
-    topbar: {
-      brand: "Forrest The Dump",
-      backHref: "index.html",
-      ctaLabel: "M'écrire",
-    },
-
-    // -- En-tête ------------------------------------------------------------
-    header: {
-      eyebrow: "Montage vidéo & clipping",           // petit surtitre
-      title: "Je transforme tes rushes en vidéos qu'on regarde jusqu'au bout.",
+    hero: {
+      label: "Montage vidéo & clipping",
+      title: ["Tes rushes,", "montés"],
       lede:
-        "Je monte des clips, des formats courts et des vidéos longues pour des artistes " +
-        "et des créateurs. Tu m'envoies les rushes, je te rends un fichier prêt à publier.", // TODO : réécris-le avec tes mots.
+        "Je monte des clips, des formats courts et des vidéos longues. " +
+        "Dis-moi le format, la durée et la deadline : je réponds avec un prix et un délai.",
     },
 
-    // -- Ce que je propose : exactement 3 blocs courts ----------------------
     services: {
       title: "Ce que je propose",
       items: [
         {
           title: "Clips",
           description:
-            "Montage rythmé sur le morceau, étalonnage, effets. Tu reçois le master " +
-            "dans le format de ton choix, plus une version verticale pour les réseaux.", // TODO
+            "Montage rythmé sur le morceau, étalonnage, effets. Master dans le format de ton choix, plus une version verticale.",
+          color: "mint",
         },
         {
-          title: "Formats courts (vertical)",
+          title: "Formats courts",
           description:
-            "Reels, Shorts, TikTok : accroche dans les deux premières secondes, " +
-            "sous-titres calés à la voix, coupes au rythme.", // TODO
+            "Reels, Shorts, TikTok : accroche dans les deux premières secondes, sous-titres calés à la voix, coupes au rythme.",
+          color: "lavender",
         },
         {
-          title: "Montage long format",
+          title: "Long format",
           description:
-            "Vidéos YouTube, documentaires courts, interviews. Construction du récit, " +
-            "nettoyage du son, habillage.", // TODO
+            "Vidéos YouTube, documentaires courts, interviews. Construction du récit, nettoyage du son, habillage.",
+          color: "sun",
         },
       ],
     },
 
-    // -- Réalisations : 4 emplacements --------------------------------------
-    //    kind: "youtube"   → videoId = l'identifiant de la vidéo.
-    //                        Dans https://www.youtube.com/watch?v=ABC123xyz
-    //                        l'identifiant est ABC123xyz (après "v=").
-    //    kind: "instagram" → href = l'URL du post ou du reel.
-    //                        thumb = une image que tu déposes dans assets/
-    //                        (Instagram ne permet pas d'intégrer une vidéo
-    //                         sans charger ses scripts de suivi : on met donc
-    //                         une vignette cliquable, sans tracker.)
-    //    kind: "empty"     → emplacement réservé, affiché en pointillés.
+    /* kind: "youtube"   → videoId = ce qui suit « v= » dans l'URL de la vidéo.
+       kind: "instagram" → href = l'URL du reel, thumb = une image dans assets/.
+       Sans videoId ni href, l'emplacement s'affiche en gris clair.
+       Passe showEmptySlots à false avant d'envoyer le lien à un client. */
     works: {
       title: "Réalisations",
-      description: "Une sélection. Le reste est sur mes réseaux.",
-      // Les emplacements encore vides s'affichent en pointillés tant que tu
-      // remplis la page. Passe à false avant d'envoyer le lien à un client :
-      // un cadre « emplacement libre » sur une page commerciale, ça se voit.
+      intro: "Une sélection. Le reste est sur mes réseaux.",
       showEmptySlots: true,
       items: [
-        {
-          kind: "youtube",
-          videoId: "", // TODO : identifiant de la vidéo YouTube.
-          title: "Titre de la réalisation", // TODO
-          caption: "Client / type de projet / année", // TODO
-        },
-        {
-          kind: "youtube",
-          videoId: "", // TODO
-          title: "Titre de la réalisation", // TODO
-          caption: "Client / type de projet / année", // TODO
-        },
-        {
-          kind: "instagram",
-          href: "https://www.instagram.com/4restdump_/", // TODO : URL du reel précis.
-          thumb: "", // TODO (facultatif) : "assets/reel-1.jpg"
-          title: "Reel — titre", // TODO
-          caption: "Format vertical / année", // TODO
-        },
-        {
-          kind: "instagram",
-          href: "https://www.instagram.com/4restdump_/", // TODO
-          thumb: "", // TODO (facultatif)
-          title: "Reel — titre", // TODO
-          caption: "Format vertical / année", // TODO
-        },
+        { kind: "youtube", videoId: "", title: "Fuego", caption: "Clip · 2026" },           // TODO : videoId
+        { kind: "youtube", videoId: "", title: "Used2that", caption: "Clip · 2026" },       // TODO
+        { kind: "instagram", href: "https://www.instagram.com/4restdump_/", thumb: "", title: "Cash Crime", caption: "Format vertical · 2026" }, // TODO
+        { kind: "instagram", href: "https://www.instagram.com/4restdump_/", thumb: "", title: "Zenology", caption: "Format vertical · 2026" },   // TODO
       ],
     },
 
-    // -- Contact ------------------------------------------------------------
     contact: {
-      title: "Travailler ensemble",
-      description:
-        "Dis-moi le format, la durée et la deadline, je te réponds avec un prix et un délai.",
+      title: ["Travailler", "ensemble"],
+      description: "Le format, la durée, la deadline. Je réponds avec un prix et un délai.",
       email: {
-        // Adresse publique, volontairement dédiée : elle est lisible dans le
-        // code source de la page, comme toute adresse en mailto:.
         address: "contact@4restdump.com",
-        subject: "Projet de montage — Forrest The Dump", // pré-rempli dans le mail
-        label: "M'écrire par e-mail",
-        // Le bouton « copier » à côté : pratique sur mobile, où mailto: ouvre
-        // parfois une application que personne n'utilise.
+        subject: "Projet de montage — Forrest The Dump",
+        label: "M'écrire",
         copyLabel: "Copier l'adresse",
-        copiedLabel: "Adresse copiée",
+        copiedLabel: "Copié",
       },
-      instagram: {
-        // Instagram n'a pas d'URL de DM direct fiable : on envoie sur le profil.
-        href: "https://www.instagram.com/4restdump_/",
-        label: "M'écrire en DM",
-      },
-    },
-
-    // -- Retour discret vers le hub ----------------------------------------
-    back: {
-      label: "Retour à l'accueil",
-      href: "index.html",
+      instagram: { href: "https://www.instagram.com/4restdump_/", label: "DM Instagram" },
     },
   },
 };
 
 /* =============================================================================
    MOTEUR DE RENDU — tu n'as normalement pas à modifier ce qui suit.
-   Il lit SITE et remplit les emplacements des deux pages.
    ========================================================================== */
 
 (function () {
   "use strict";
 
-  var root = document.documentElement;
-  root.classList.remove("no-js");
+  document.documentElement.classList.remove("no-js");
 
-  /* Deux préférences système, lues une fois. Elles conditionnent tout ce qui
-     bouge plus bas : on ne fabrique même pas les observateurs si l'utilisateur
-     a demandé moins de mouvement. */
-  var reduceMotion =
-    window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var finePointer =
-    window.matchMedia && window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  var SVG = "http://www.w3.org/2000/svg";
 
-  /** Crée un élément, avec classe et texte optionnels. */
   function el(tag, className, text) {
     var node = document.createElement(tag);
     if (className) node.className = className;
@@ -307,322 +237,304 @@ const SITE = {
     return node;
   }
 
-  /* --------------------------------- ICÔNES ------------------------------
-     Dessinées ici, en SVG, plutôt que chargées depuis une librairie : le site
-     ne fait toujours que trois requêtes, et les icônes prennent la couleur du
-     texte qui les entoure. */
-  var PATHS = {
-    youtube:
-      "M21.6 7.2a2.8 2.8 0 0 0-2-2C17.9 4.7 12 4.7 12 4.7s-5.9 0-7.6.5a2.8 2.8 0 0 0-2 2C2 8.9 2 12 2 12s0 3.1.4 4.8a2.8 2.8 0 0 0 2 2c1.7.5 7.6.5 7.6.5s5.9 0 7.6-.5a2.8 2.8 0 0 0 2-2c.4-1.7.4-4.8.4-4.8s0-3.1-.4-4.8ZM10.2 15.3V8.7l5.4 3.3-5.4 3.3Z",
-    instagram: [
-      "M12 7.6a4.4 4.4 0 1 0 0 8.8 4.4 4.4 0 0 0 0-8.8Zm0 7.2a2.8 2.8 0 1 1 0-5.6 2.8 2.8 0 0 1 0 5.6Z",
-      "M16.7 6.2a1 1 0 1 0 0 2.1 1 1 0 0 0 0-2.1Z",
-      "M16.5 3h-9A4.5 4.5 0 0 0 3 7.5v9A4.5 4.5 0 0 0 7.5 21h9a4.5 4.5 0 0 0 4.5-4.5v-9A4.5 4.5 0 0 0 16.5 3Zm2.9 13.5a2.9 2.9 0 0 1-2.9 2.9h-9a2.9 2.9 0 0 1-2.9-2.9v-9a2.9 2.9 0 0 1 2.9-2.9h9a2.9 2.9 0 0 1 2.9 2.9v9Z",
-    ],
-    tiktok:
-      "M16.5 3c.3 2.1 1.5 3.4 3.5 3.5v2.3c-1.2.1-2.3-.2-3.4-.9v5.9c0 4.6-5 6-7 2.6-1.3-2.2-.5-6 3.9-6.2v2.4c-.3 0-.7.1-1 .2-1 .3-1.5 1-1.4 2 .3 2 3.9 2.6 3.6-1.3V3h1.8Z",
-    github:
-      "M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.3 1.1 2.9.8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.3-.4-1.3.1-2.7 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.4.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.4 4.7-4.6 5 .3.3.7 1 .7 2v2.9c0 .3.2.6.7.5A10 10 0 0 0 12 2Z",
-    mail: [
-      "M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 2v.5l-8 5-8-5V6h16Zm0 12H4V8.8l7.5 4.7c.3.2.7.2 1 0L20 8.8V18Z",
-    ],
-    copy: [
-      "M9 3h9a2 2 0 0 1 2 2v9h-2V5H9V3Z",
-      "M6 7h9a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2Zm0 2v10h9V9H6Z",
-    ],
-    check: "M9.5 16.2 5.3 12l-1.4 1.4 5.6 5.6L20.1 8.4 18.7 7 9.5 16.2Z",
-    link: "M10.6 13.4a1 1 0 0 1 0-1.4l1.4-1.4a1 1 0 0 1 1.4 1.4l-1.4 1.4a1 1 0 0 1-1.4 0Zm-3.5 4.9a4 4 0 0 1 0-5.7l2.1-2.1 1.4 1.4-2.1 2.1a2 2 0 0 0 2.8 2.8l2.1-2.1 1.4 1.4-2.1 2.1a4 4 0 0 1-5.6 0Zm9.8-9.8-2.1 2.1-1.4-1.4 2.1-2.1a2 2 0 0 0-2.8-2.8l-2.1 2.1L9.2 5l2.1-2.1a4 4 0 0 1 5.7 5.6Z",
-    arrow: "M13.2 5.6 11.8 7l4 4H4v2h11.8l-4 4 1.4 1.4L19.6 12l-6.4-6.4Z",
-    back: "M10.8 18.4 12.2 17l-4-4H20v-2H8.2l4-4-1.4-1.4L4.4 12l6.4 6.4Z",
-  };
-
-  /** Fabrique une icône SVG à partir de PATHS. */
-  function icon(name) {
-    var d = PATHS[name];
-    if (!d) return null;
-    var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    svg.setAttribute("class", "icon");
-    svg.setAttribute("viewBox", "0 0 24 24");
-    svg.setAttribute("fill", "currentColor");
-    svg.setAttribute("aria-hidden", "true");
-    svg.setAttribute("focusable", "false");
-    (Array.isArray(d) ? d : [d]).forEach(function (segment) {
-      var path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-      path.setAttribute("d", segment);
-      svg.appendChild(path);
-    });
-    return svg;
-  }
-
-  /** Vrai si l'URL sort du site (http/https/mailto). */
   function isExternal(href) {
     return /^(https?:|mailto:)/i.test(href);
   }
 
-  /** Applique href + sécurité des liens sortants. */
-  function link(anchor, href, external) {
+  function link(anchor, href) {
     anchor.href = href;
-    var out = external === undefined ? isExternal(href) : external;
-    if (out && !/^mailto:/i.test(href)) {
+    if (isExternal(href) && !/^mailto:/i.test(href)) {
       anchor.target = "_blank";
       anchor.rel = "noopener noreferrer";
     }
     return anchor;
   }
 
-  /* ------------------------- LE HALO QUI SUIT LE CURSEUR ------------------
-     Une seule paire de variables CSS posée sur la carte survolée. On écrit
-     directement sur l'élément visé (jamais sur un parent : une variable CSS
-     posée haut dans l'arbre force le recalcul de tous ses descendants). */
-  function trackPointer(node) {
-    if (!finePointer || reduceMotion) return;
-    node.addEventListener(
-      "pointermove",
-      function (event) {
-        var box = node.getBoundingClientRect();
-        node.style.setProperty("--mx", (event.clientX - box.left) + "px");
-        node.style.setProperty("--my", (event.clientY - box.top) + "px");
-      },
-      { passive: true }
-    );
+  /* ------------------------------- DESSINS -------------------------------
+     Stickers et rubans sont dessinés ici, en SVG : le site ne charge aucune
+     image décorative et tout prend la couleur de son conteneur. */
+
+  var GLYPHS = {
+    play: "M8 5v14l11-7-11-7z",
+    star: "M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.3 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8L12 2z",
+    bolt: "M13 2L4.5 13.5H11l-1 8.5L18.5 10.5H12L13 2z",
+    heart: "M12 21S2.8 15.5 2.8 9.4A4.6 4.6 0 0 1 12 7.2a4.6 4.6 0 0 1 9.2 2.2C21.2 15.5 12 21 12 21z",
+    check: "M9.5 16.2 5.3 12l-1.4 1.4 5.6 5.6L20.1 8.4 18.7 7 9.5 16.2z",
+    clap: "M2.6 7.3 21 4l.5 3L3.1 10.3l-.5-3zM3 12h18v8H3v-8z",
+  };
+
+  function glyph(name) {
+    var svg = document.createElementNS(SVG, "svg");
+    svg.setAttribute("viewBox", "0 0 24 24");
+    svg.setAttribute("fill", "currentColor");
+    svg.setAttribute("aria-hidden", "true");
+    var path = document.createElementNS(SVG, "path");
+    path.setAttribute("d", GLYPHS[name] || GLYPHS.star);
+    svg.appendChild(path);
+    return svg;
   }
 
-  /* ------------------------------ ENTRÉE EN SCÈNE ------------------------
-     Chaque bloc s'affiche quand il entre dans l'écran, décalé sur son voisin.
-     Purement décoratif : le contenu est déjà dans le DOM, déjà lisible par un
-     lecteur d'écran, et déjà cliquable. */
-  var revealIndex = 0;
-  var observer =
-    !reduceMotion && "IntersectionObserver" in window
-      ? new IntersectionObserver(
-          function (entries, obs) {
-            entries.forEach(function (entry) {
-              if (!entry.isIntersecting) return;
-              entry.target.classList.add("is-in");
-              obs.unobserve(entry.target);
-            });
-          },
-          { rootMargin: "0px 0px -8% 0px", threshold: 0.06 }
-        )
-      : null;
-
-  function reveal(node, order) {
-    if (!observer) return node;
-    node.classList.add("reveal");
-    var rank = order === undefined ? revealIndex++ : order;
-    // Le décalage est plafonné : au-delà de six éléments, on n'attend plus.
-    node.style.setProperty("--reveal-delay", Math.min(rank, 6) * 45 + "ms");
-    observer.observe(node);
+  /** Un sticker : carré arrondi, cerné de noir, posé de travers. */
+  function sticker(name, color, style, rotation) {
+    var node = el("span", "sticker sticker--" + color);
+    node.appendChild(glyph(name));
+    node.setAttribute("aria-hidden", "true");
+    node.style.cssText = style + ";transform:rotate(" + rotation + "deg)";
     return node;
   }
-
-  /* --------------------------------- CARTES ------------------------------ */
 
   /**
-   * Une carte du hub. Elle devient un <a> si l'item a une URL, et un <div>
-   * sinon — un projet pas encore en ligne n'est pas un lien cassé, c'est un
-   * projet pas encore en ligne.
+   * Le ruban : un tube bleu tracé en SVG. Le volume vient de deux tracés
+   * superposés — le corps, puis un reflet plus clair décalé vers le haut —
+   * et non d'un dégradé, qui casserait l'aspect papier découpé.
    */
-  function card(item, variant) {
-    var href = item.href || "";
-    var node = el(href ? "a" : "div", "card" + (variant ? " card--" + variant : ""));
-    if (href) link(node, href, item.external);
-    else node.classList.add("is-placeholder");
+  function ribbon(variant, path) {
+    var svg = document.createElementNS(SVG, "svg");
+    svg.setAttribute("class", "ribbon ribbon--" + variant);
+    svg.setAttribute("viewBox", "0 0 1200 320");
+    svg.setAttribute("fill", "none");
+    svg.setAttribute("aria-hidden", "true");
+    svg.setAttribute("preserveAspectRatio", "none");
 
-    // Le logo d'une app passe avant l'icône générique : c'est le vrai signe
-    // de reconnaissance. Si le fichier manque, le carré disparaît au lieu
-    // d'afficher une image cassée, et la carte reste alignée sur les autres.
-    if (item.logo) {
-      var frame = el("span", "card__icon card__icon--logo");
-      var shot = el("img");
-      shot.src = item.logo;
-      shot.alt = "";
-      shot.width = 38;
-      shot.height = 38;
-      shot.loading = "lazy";
-      shot.decoding = "async";
-      shot.addEventListener("error", function () {
-        frame.remove();
+    function stroke(width, color, offset) {
+      var p = document.createElementNS(SVG, "path");
+      p.setAttribute("d", path);
+      p.setAttribute("stroke", color);
+      p.setAttribute("stroke-width", String(width));
+      p.setAttribute("stroke-linecap", "round");
+      if (offset) p.setAttribute("transform", "translate(0," + offset + ")");
+      svg.appendChild(p);
+    }
+
+    stroke(118, "#000000", 0);   // le filet noir, dessiné par-dessous
+    stroke(112, "#4da2ff", 0);   // le corps du tube
+    stroke(26, "#9ccaff", -26);  // le reflet, à plat
+
+    return svg;
+  }
+
+  /* ------------------------------ COMPOSANTS ------------------------------ */
+
+  /** Bandeau défilant. La liste est dupliquée : la boucle ne saute pas. */
+  function renderMarquee() {
+    var mount = document.getElementById("marquee");
+    if (!mount || !SITE.marquee) return;
+    mount.className = "marquee";
+    var track = el("div", "marquee__track");
+    for (var pass = 0; pass < 2; pass++) {
+      SITE.marquee.forEach(function (text) {
+        track.appendChild(el("span", "marquee__item", text + "  ✦"));
       });
-      frame.appendChild(shot);
-      node.appendChild(frame);
-    } else if (item.icon) {
-      var badge = el("span", "card__icon");
-      var glyph = icon(item.icon);
-      if (glyph) badge.appendChild(glyph);
-      node.appendChild(badge);
     }
+    mount.setAttribute("aria-hidden", "true");
+    mount.appendChild(track);
+  }
 
-    var body = el("div", "card__body");
-    if (item.eyebrow) body.appendChild(el("span", "card__eyebrow", item.eyebrow));
-    body.appendChild(el("span", "card__title", item.title));
-    if (item.description) body.appendChild(el("span", "card__desc", item.description));
-    if (item.handle) body.appendChild(el("span", "card__handle", item.handle));
-    if (item.tag) {
-      var meta = el("div", "card__meta");
-      meta.appendChild(el("span", "card__tag", item.tag));
-      body.appendChild(meta);
+  function renderNav() {
+    var mount = document.getElementById("nav");
+    if (!mount || !SITE.nav) return;
+    mount.className = "nav";
+
+    var brand = el("a", "nav__brand");
+    link(brand, SITE.nav.homeHref);
+    var mark = el("span", "nav__mark", SITE.profile.monogram);
+    mark.setAttribute("aria-hidden", "true");
+    brand.appendChild(mark);
+    brand.appendChild(document.createTextNode(SITE.profile.name));
+    mount.appendChild(brand);
+
+    var links = el("nav", "nav__links");
+    links.setAttribute("aria-label", "Navigation principale");
+    (SITE.nav.links || []).forEach(function (item, i) {
+      var a = el("a", "pill " + ["pill--sun", "pill--mint", "pill--lavender"][i % 3], item.label);
+      link(a, item.href);
+      links.appendChild(a);
+    });
+    mount.appendChild(links);
+
+    if (SITE.nav.cta) {
+      var cta = el("a", "pill pill--filled", SITE.nav.cta.label);
+      link(cta, SITE.nav.cta.href);
+      mount.appendChild(cta);
     }
-    node.appendChild(body);
+  }
 
-    if (href) {
-      var chevron = el("span", "card__chevron");
-      var arrow = icon("arrow");
-      if (variant === "featured" && arrow) chevron.appendChild(arrow);
-      else chevron.textContent = "→";
-      chevron.setAttribute("aria-hidden", "true");
-      node.appendChild(chevron);
-    } else {
-      node.appendChild(el("span", "chip", "Bientôt"));
-    }
+  // En capitales, É À Ê Ç portent leur accent au-dessus de la hauteur de
+  // capitale. Avec un interligne à 0,78, cet accent passe derrière la ligne
+  // du dessus et disparaît — les deux sont noirs. Les lignes concernées
+  // reçoivent donc un filet d'air, et elles seules.
+  var ACCENTED = /[ÀÂÄÇÉÈÊËÎÏÔÖÙÛÜŒÆ]/;
 
-    trackPointer(node);
+  /** Bloc d'affichage : une ligne par entrée, interligne écrasé. */
+  function displayBlock(lines, className, tag) {
+    var node = el(tag || "h1", "display" + (className ? " " + className : ""));
+    lines.forEach(function (line) {
+      var span = el("span", "display__line", line);
+      if (ACCENTED.test(line.toUpperCase())) span.classList.add("display__line--accent");
+      node.appendChild(span);
+    });
     return node;
   }
 
-  /** Section titrée du hub, reliée à son titre pour les lecteurs d'écran. */
-  function group(mount, data, idBase, layout) {
-    if (!mount || !data) return;
-    var heading = el("h2", "group__title", data.title);
-    heading.id = idBase + "-title";
-    mount.setAttribute("aria-labelledby", heading.id);
-    mount.appendChild(reveal(heading));
-
-    var list = el("ul", layout === "grid" ? "grid-2" : "stack");
-    (data.items || []).forEach(function (item, i) {
-      var li = el("li");
-      li.appendChild(card(item));
-      list.appendChild(reveal(li, i));
-      revealIndex = 0;
-    });
-    mount.appendChild(list);
+  function ghostLink(label, href, variant) {
+    var a = el("a", "pill" + (variant ? " " + variant : ""), label);
+    link(a, href);
+    return a;
   }
 
   /* --------------------------------- HUB --------------------------------- */
 
-  function renderHub() {
-    var profile = document.getElementById("profile");
-    if (profile && SITE.profile) {
-      var av = SITE.profile.avatar;
+  function renderHero() {
+    var mount = document.getElementById("hero");
+    if (!mount) return;
+    mount.className = "band band--sky hero";
 
-      /** Le monogramme, replié dessus si la photo manque ou ne charge pas. */
-      function monogram() {
-        if (!SITE.profile.monogram) return null;
-        var mark = el("div", "monogram", SITE.profile.monogram);
-        mark.setAttribute("aria-hidden", "true");
-        return mark;
-      }
+    var inner = el("div", "band__inner");
 
-      if (av && av.show && av.src) {
-        var img = el("img", "avatar");
-        img.src = av.src;
-        img.alt = av.alt || "";
-        img.width = 96;
-        img.height = 96;
-        img.decoding = "async";
-        // Si le fichier n'existe pas encore, on retombe sur le monogramme
-        // plutôt que d'afficher une icône cassée.
-        img.addEventListener("error", function () {
-          var mark = monogram();
-          if (mark) img.replaceWith(mark);
-          else img.remove();
-        });
-        profile.appendChild(img);
-      } else {
-        var mark = monogram();
-        if (mark) profile.appendChild(mark);
-      }
-
-      profile.appendChild(el("h1", "name", SITE.profile.name));
-      profile.appendChild(el("p", "tagline", SITE.profile.tagline));
-
-      var status = SITE.profile.status;
-      if (status && status.show && status.label) {
-        var pill = el("p", "status");
-        var dot = el("span", "status__dot");
-        dot.setAttribute("aria-hidden", "true");
-        pill.appendChild(dot);
-        pill.appendChild(document.createTextNode(status.label));
-        profile.appendChild(pill);
-      }
+    var p = SITE.profile;
+    if (p.status && p.status.show) {
+      var pill = el("p", "status");
+      var dot = el("span", "status__dot");
+      dot.setAttribute("aria-hidden", "true");
+      pill.appendChild(dot);
+      pill.appendChild(document.createTextNode(p.status.label));
+      inner.appendChild(pill);
     }
 
-    var featured = document.getElementById("featured");
-    if (featured && SITE.featured) {
-      featured.appendChild(reveal(card(SITE.featured, "featured")));
-    }
+    var wrap = el("div", "display-wrap");
+    wrap.appendChild(ribbon("hero", "M-60 210 C 180 40, 420 300, 660 150 S 1060 20, 1280 140"));
+    wrap.appendChild(displayBlock(p.displayLines, "hero__display"));
+    inner.appendChild(wrap);
+    inner.appendChild(el("p", "tagline", p.tagline));
 
-    group(document.getElementById("socials"), SITE.socials, "socials", "grid");
-    group(document.getElementById("projects"), SITE.projects, "projects");
+    var actions = el("div", "hero__actions");
+    (SITE.socials || []).forEach(function (s, i) {
+      actions.appendChild(
+        ghostLink(s.label + " " + s.handle, s.href, i === 0 ? "pill--sun" : "pill--lavender")
+      );
+    });
+    inner.appendChild(actions);
 
-    var footer = document.getElementById("footer");
-    if (footer && SITE.hubFooter) {
-      var text = el("p", "footer__text", SITE.hubFooter.text);
-      if (SITE.hubFooter.note) {
-        text.appendChild(el("span", "footer__note", SITE.hubFooter.note));
-      }
-      footer.appendChild(text);
+    mount.appendChild(inner);
+
+    // Les stickers sont posés en pourcentages : ils suivent la bande quand
+    // elle grandit, sans jamais tomber sur la grille.
+    mount.appendChild(sticker("play", "ember", "top:14%;right:8%", -12));
+    mount.appendChild(sticker("star", "sun", "bottom:8%;right:6%", 14));
+    mount.appendChild(sticker("bolt", "violet", "top:42%;left:-2%", 9));
+  }
+
+  function renderFeatured() {
+    var mount = document.getElementById("featured");
+    if (!mount || !SITE.featured) return;
+    mount.className = "band band--paper";
+
+    var inner = el("div", "band__inner");
+    var card = el("div", "feature");
+
+    var left = el("div");
+    left.appendChild(el("p", "label", SITE.featured.label));
+    left.appendChild(displayBlock(SITE.featured.title, "feature__title", "h2"));
+    card.appendChild(left);
+
+    var right = el("div");
+    right.appendChild(el("p", "lede", SITE.featured.description));
+    var list = el("div", "feature__list");
+    (SITE.featured.bullets || []).forEach(function (b, i) {
+      list.appendChild(el("span", "tag", b));
+    });
+    right.appendChild(list);
+    var go = ghostLink(SITE.featured.cta, SITE.featured.href, "pill--filled");
+    go.style.marginTop = "var(--s-5)";
+    right.appendChild(go);
+    card.appendChild(right);
+
+    inner.appendChild(card);
+    mount.appendChild(inner);
+    mount.appendChild(sticker("clap", "mint", "bottom:10%;right:5%", -8));
+  }
+
+  function projectCard(item) {
+    var href = item.href || "";
+    var node = el(href ? "a" : "div", "card card--" + (item.color || "mist"));
+    if (href) link(node, href);
+    else node.classList.add("card--soon");
+
+    var head = el("div", "card__head");
+    if (item.logo) {
+      var frame = el("span", "card__logo");
+      var img = el("img");
+      img.src = item.logo;
+      img.alt = "";
+      img.width = 44;
+      img.height = 44;
+      img.loading = "lazy";
+      img.decoding = "async";
+      img.addEventListener("error", function () {
+        frame.remove();
+      });
+      frame.appendChild(img);
+      head.appendChild(frame);
     }
+    head.appendChild(el("h3", "card__title", item.title));
+    node.appendChild(head);
+
+    node.appendChild(el("p", "card__desc", item.description));
+
+    var foot = el("div", "card__foot");
+    foot.appendChild(el("span", "tag", item.tag || "Projet"));
+    if (href) {
+      var arrow = el("span", "card__arrow", "↗");
+      arrow.setAttribute("aria-hidden", "true");
+      foot.appendChild(arrow);
+    } else {
+      foot.appendChild(el("span", "tag", "Bientôt"));
+    }
+    node.appendChild(foot);
+
+    return node;
+  }
+
+  function renderProjects() {
+    var mount = document.getElementById("projects");
+    if (!mount || !SITE.projects) return;
+    mount.className = "band band--concrete";
+    mount.id = "projects";
+
+    var inner = el("div", "band__inner");
+    var head = el("div");
+    head.style.marginBottom = "var(--s-10)";
+    var title = el("h2", "heading", SITE.projects.title);
+    title.id = "projets";
+    head.appendChild(title);
+    if (SITE.projects.intro) head.appendChild(el("p", "lede", SITE.projects.intro));
+    inner.appendChild(head);
+
+    var grid = el("div", "grid");
+    (SITE.projects.items || []).forEach(function (item) {
+      grid.appendChild(projectCard(item));
+    });
+    inner.appendChild(grid);
+    mount.appendChild(inner);
+  }
+
+  function renderFooter() {
+    var mount = document.getElementById("footer");
+    if (!mount || !SITE.footer) return;
+    mount.className = "footer";
+    mount.appendChild(el("span", null, SITE.footer.text));
+
+    var right = el("div", "feature__list");
+    (SITE.socials || []).forEach(function (s) {
+      right.appendChild(ghostLink(s.label, s.href));
+    });
+    mount.appendChild(right);
+    mount.appendChild(el("span", null, SITE.footer.note));
   }
 
   /* ------------------------------- MONTAGE ------------------------------- */
 
-  /** Une tuile de la grille « Réalisations ». */
-  function work(item) {
-    var figure = el("figure", "work");
-
-    if (item.kind === "youtube" && item.videoId) {
-      var frame = el("div", "work__media work__media--video");
-      var iframe = document.createElement("iframe");
-      // youtube-nocookie : pas de cookie publicitaire posé avant lecture.
-      iframe.src =
-        "https://www.youtube-nocookie.com/embed/" +
-        encodeURIComponent(item.videoId) +
-        "?rel=0";
-      iframe.title = item.title || "Vidéo YouTube";
-      iframe.loading = "lazy";
-      iframe.allow =
-        "accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
-      iframe.allowFullscreen = true;
-      iframe.setAttribute("referrerpolicy", "strict-origin-when-cross-origin");
-      frame.appendChild(iframe);
-      figure.appendChild(frame);
-    } else if (item.kind === "instagram" && item.href) {
-      var a = el("a", "work__media work__media--link");
-      link(a, item.href);
-      if (item.thumb) {
-        var img = el("img", "work__thumb");
-        img.src = item.thumb;
-        img.alt = item.title || "";
-        img.loading = "lazy";
-        img.decoding = "async";
-        img.addEventListener("error", function () {
-          img.remove();
-          a.classList.add("work__media--bare");
-        });
-        a.appendChild(img);
-      } else {
-        a.classList.add("work__media--bare");
-      }
-      a.appendChild(el("span", "work__badge", "Voir sur Instagram →"));
-      trackPointer(a);
-      figure.appendChild(a);
-    } else {
-      // Emplacement encore vide : visible mais neutre.
-      var slot = el("div", "work__media work__media--empty");
-      slot.appendChild(el("span", "work__slot", "Emplacement libre"));
-      figure.appendChild(slot);
-    }
-
-    var caption = el("figcaption", "work__caption");
-    if (item.title) caption.appendChild(el("span", "work__title", item.title));
-    if (item.caption) caption.appendChild(el("span", "work__meta", item.caption));
-    figure.appendChild(caption);
-    return figure;
-  }
-
-  /** L'adresse e-mail, assemblée en mailto: avec son objet pré-rempli. */
-  function mailtoFrom(email) {
+  function mailto(email) {
     return (
       "mailto:" +
       email.address +
@@ -630,246 +542,221 @@ const SITE = {
     );
   }
 
+  function renderMontageHero() {
+    var mount = document.getElementById("hero");
+    if (!mount) return;
+    var M = SITE.montage;
+    mount.className = "band band--sky hero";
+
+    var inner = el("div", "band__inner");
+    inner.appendChild(el("p", "label", M.hero.label));
+    var wrap = el("div", "display-wrap");
+    wrap.appendChild(ribbon("hero", "M-60 240 C 220 90, 380 280, 640 170 S 1020 60, 1280 190"));
+    wrap.appendChild(displayBlock(M.hero.title, "hero__display"));
+    inner.appendChild(wrap);
+    inner.appendChild(el("p", "lede", M.hero.lede));
+
+    var actions = el("div", "hero__actions");
+    actions.appendChild(ghostLink(M.contact.email.label, mailto(M.contact.email), "pill--filled"));
+    actions.appendChild(ghostLink(M.contact.instagram.label, M.contact.instagram.href, "pill--lavender"));
+    inner.appendChild(actions);
+
+    mount.appendChild(inner);
+    mount.appendChild(sticker("clap", "ember", "top:16%;right:9%", -10));
+    mount.appendChild(sticker("heart", "lavender", "bottom:6%;right:5%", 12));
+  }
+
+  function renderServices() {
+    var mount = document.getElementById("services");
+    if (!mount) return;
+    var S = SITE.montage.services;
+    mount.className = "band band--paper";
+
+    var inner = el("div", "band__inner");
+    var title = el("h2", "heading", S.title);
+    title.style.marginBottom = "var(--s-10)";
+    inner.appendChild(title);
+
+    var grid = el("div", "services");
+    S.items.forEach(function (item, i) {
+      var block = el("div", "service card--" + (item.color || "mist"));
+      var index = el("span", "service__index", String(i + 1).padStart(2, "0"));
+      index.setAttribute("aria-hidden", "true");
+      block.appendChild(index);
+      block.appendChild(el("h3", "service__title", item.title));
+      block.appendChild(el("p", "service__desc", item.description));
+      grid.appendChild(block);
+    });
+    inner.appendChild(grid);
+    mount.appendChild(inner);
+  }
+
+  function workTile(item) {
+    var figure = el("figure", "work");
+
+    if (item.kind === "youtube" && item.videoId) {
+      var frame = el("div", "work__media");
+      var iframe = document.createElement("iframe");
+      // youtube-nocookie : aucun cookie publicitaire posé avant lecture.
+      iframe.src =
+        "https://www.youtube-nocookie.com/embed/" + encodeURIComponent(item.videoId) + "?rel=0";
+      iframe.title = item.title || "Vidéo";
+      iframe.loading = "lazy";
+      iframe.allow = "accelerometer; clipboard-write; encrypted-media; picture-in-picture";
+      iframe.allowFullscreen = true;
+      iframe.setAttribute("referrerpolicy", "strict-origin-when-cross-origin");
+      frame.appendChild(iframe);
+      figure.appendChild(frame);
+    } else if (item.kind === "instagram" && item.href) {
+      var a = el("a", "work__media work__media--vertical");
+      link(a, item.href);
+      if (item.thumb) {
+        var img = el("img");
+        img.src = item.thumb;
+        img.alt = item.title || "";
+        img.loading = "lazy";
+        img.style.cssText = "width:100%;height:100%;object-fit:cover";
+        img.addEventListener("error", function () {
+          img.remove();
+          a.classList.add("work__empty");
+        });
+        a.appendChild(img);
+      } else {
+        a.classList.add("work__empty");
+      }
+      a.appendChild(el("span", "work__badge", "Voir sur Instagram"));
+      figure.appendChild(a);
+    } else {
+      var slot = el("div", "work__media work__empty");
+      slot.appendChild(el("span", null, "Emplacement libre"));
+      figure.appendChild(slot);
+    }
+
+    var caption = el("figcaption");
+    if (item.title) caption.appendChild(el("span", "work__title", item.title));
+    if (item.caption) {
+      caption.appendChild(document.createElement("br"));
+      caption.appendChild(el("span", "work__meta", item.caption));
+    }
+    figure.appendChild(caption);
+    return figure;
+  }
+
+  function renderWorks() {
+    var mount = document.getElementById("works");
+    if (!mount) return;
+    var W = SITE.montage.works;
+    mount.className = "band band--concrete";
+
+    var inner = el("div", "band__inner");
+    var head = el("div");
+    head.style.marginBottom = "var(--s-10)";
+    head.appendChild(el("h2", "heading", W.title));
+    if (W.intro) head.appendChild(el("p", "lede", W.intro));
+    inner.appendChild(head);
+
+    var grid = el("div", "works");
+    W.items
+      .filter(function (item) {
+        if (W.showEmptySlots !== false) return true;
+        return (item.kind === "youtube" && item.videoId) ||
+          (item.kind === "instagram" && item.href);
+      })
+      .forEach(function (item) {
+        grid.appendChild(workTile(item));
+      });
+    inner.appendChild(grid);
+    mount.appendChild(inner);
+  }
+
   /**
-   * Le bouton « copier l'adresse ». Il confirme lui-même ce qu'il a fait :
-   * un bouton qui ne dit rien laisse l'utilisateur appuyer trois fois.
+   * Le bouton « copier ». Il confirme lui-même : un bouton muet se fait
+   * appuyer trois fois.
    */
   function copyButton(email) {
-    var button = el("button", "btn");
+    var button = el("button", "pill", email.copyLabel);
     button.type = "button";
+    var timer;
 
-    var label = el("span", "btn__label");
-    function fill(text, glyph) {
-      label.textContent = "";
-      var svg = icon(glyph);
-      if (svg) label.appendChild(svg);
-      label.appendChild(document.createTextNode(text));
+    function done() {
+      button.textContent = email.copiedLabel;
+      button.classList.add("is-done");
+      window.clearTimeout(timer);
+      timer = window.setTimeout(function () {
+        button.textContent = email.copyLabel;
+        button.classList.remove("is-done");
+      }, 2200);
     }
-    fill(email.copyLabel || "Copier l'adresse", "copy");
-    button.appendChild(label);
 
-    var resetTimer;
-    button.addEventListener("click", function () {
-      function confirm() {
-        // On coupe le texte pendant qu'il est flou, jamais pendant qu'il est
-        // lisible : on ne doit jamais voir les deux libellés en même temps.
-        button.classList.add("is-swapping");
-        window.setTimeout(function () {
-          fill(email.copiedLabel || "Adresse copiée", "check");
-          button.classList.remove("is-swapping");
-          button.classList.add("is-done");
-        }, 180);
-
-        window.clearTimeout(resetTimer);
-        resetTimer = window.setTimeout(function () {
-          button.classList.add("is-swapping");
-          window.setTimeout(function () {
-            fill(email.copyLabel || "Copier l'adresse", "copy");
-            button.classList.remove("is-swapping", "is-done");
-          }, 180);
-        }, 2200);
+    function fallback() {
+      var field = document.createElement("input");
+      field.value = email.address;
+      field.setAttribute("readonly", "");
+      field.style.cssText = "position:fixed;opacity:0";
+      document.body.appendChild(field);
+      field.select();
+      try {
+        document.execCommand("copy");
+        done();
+      } catch (err) {
+        window.prompt("Copie cette adresse :", email.address);
       }
+      field.remove();
+    }
 
+    button.addEventListener("click", function () {
       if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(email.address).then(confirm, fallback);
+        navigator.clipboard.writeText(email.address).then(done, fallback);
       } else {
         fallback();
       }
-
-      // Sans API presse-papiers (contexte non sécurisé, vieux navigateur),
-      // on sélectionne l'adresse pour que l'utilisateur puisse la copier.
-      function fallback() {
-        var field = document.createElement("input");
-        field.value = email.address;
-        field.setAttribute("readonly", "");
-        field.style.position = "fixed";
-        field.style.opacity = "0";
-        document.body.appendChild(field);
-        field.select();
-        try {
-          document.execCommand("copy");
-          confirm();
-        } catch (err) {
-          window.prompt("Copie cette adresse :", email.address);
-        }
-        field.remove();
-      }
     });
 
-    trackPointer(button);
     return button;
   }
 
-  /** La barre haute, et le filet qui n'apparaît qu'une fois qu'elle chevauche. */
-  function renderTopbar(data) {
-    var mount = document.getElementById("topbar");
-    if (!mount || !data) return;
+  function renderContact() {
+    var mount = document.getElementById("contact");
+    if (!mount) return;
+    var C = SITE.montage.contact;
+    mount.className = "band band--paper";
 
-    var inner = el("div", "topbar__inner");
+    var inner = el("div", "band__inner");
+    var panel = el("div", "contact");
 
-    var brand = el("a", "topbar__brand");
-    link(brand, data.backHref || "index.html", false);
-    var back = el("span", "topbar__back");
-    var glyph = icon("back");
-    if (glyph) back.appendChild(glyph);
-    back.setAttribute("aria-hidden", "true");
-    brand.appendChild(back);
-    brand.appendChild(document.createTextNode(data.brand || ""));
-    inner.appendChild(brand);
+    panel.appendChild(displayBlock(C.title, "display--sm", "h2"));
+    panel.appendChild(el("p", "lede", C.description));
 
-    var contact = SITE.montage.contact;
-    if (data.ctaLabel && contact && contact.email && contact.email.address) {
-      var cta = el("a", "chip-btn", data.ctaLabel);
-      link(cta, mailtoFrom(contact.email));
-      inner.appendChild(cta);
-    }
+    var actions = el("div", "contact__actions");
+    actions.appendChild(ghostLink(C.email.label + " — " + C.email.address, mailto(C.email), "pill--sun"));
+    actions.appendChild(copyButton(C.email));
+    actions.appendChild(ghostLink(C.instagram.label, C.instagram.href, "pill--mint"));
+    panel.appendChild(actions);
 
+    inner.appendChild(panel);
     mount.appendChild(inner);
-
-    // Un repère invisible d'un pixel, juste au-dessus de la barre : tant qu'il
-    // est visible, la barre ne chevauche rien et reste sans filet.
-    if ("IntersectionObserver" in window) {
-      var sentinel = el("div");
-      sentinel.style.cssText = "position:absolute;top:0;height:1px;width:100%;";
-      document.body.prepend(sentinel);
-      new IntersectionObserver(function (entries) {
-        mount.classList.toggle("is-stuck", !entries[0].isIntersecting);
-      }).observe(sentinel);
-    }
-  }
-
-  function renderMontage() {
-    var M = SITE.montage;
-    if (!M) return;
-
-    renderTopbar(M.topbar);
-
-    var header = document.getElementById("montage-header");
-    if (header) {
-      if (M.header.eyebrow) header.appendChild(reveal(el("p", "eyebrow", M.header.eyebrow)));
-      header.appendChild(reveal(el("h1", "display", M.header.title)));
-      header.appendChild(reveal(el("p", "lede", M.header.lede)));
-
-      // Les deux actions sont répétées en haut : un client ne doit pas avoir à
-      // faire défiler toute la page pour trouver comment te joindre.
-      var contact = M.contact;
-      if (contact) {
-        var row = el("div", "hero-actions");
-        if (contact.email && contact.email.address) {
-          var mail = el("a", "btn btn--accent");
-          var mailLabel = el("span", "btn__label");
-          var mailIcon = icon("mail");
-          if (mailIcon) mailLabel.appendChild(mailIcon);
-          mailLabel.appendChild(document.createTextNode(contact.email.label));
-          mail.appendChild(mailLabel);
-          link(mail, mailtoFrom(contact.email));
-          trackPointer(mail);
-          row.appendChild(mail);
-        }
-        if (contact.instagram && contact.instagram.href) {
-          var dm = el("a", "btn");
-          var dmLabel = el("span", "btn__label");
-          var dmIcon = icon("instagram");
-          if (dmIcon) dmLabel.appendChild(dmIcon);
-          dmLabel.appendChild(document.createTextNode(contact.instagram.label));
-          dm.appendChild(dmLabel);
-          link(dm, contact.instagram.href);
-          trackPointer(dm);
-          row.appendChild(dm);
-        }
-        if (row.childNodes.length) header.appendChild(reveal(row));
-      }
-    }
-
-    var services = document.getElementById("services");
-    if (services && M.services) {
-      var h = el("h2", "section__title", M.services.title);
-      h.id = "services-title";
-      services.setAttribute("aria-labelledby", h.id);
-      services.appendChild(reveal(h));
-      var grid = el("div", "grid grid--three");
-      M.services.items.forEach(function (s, i) {
-        var block = el("div", "block");
-        var index = el("span", "block__index", String(i + 1).padStart(2, "0"));
-        index.setAttribute("aria-hidden", "true");
-        block.appendChild(index);
-        block.appendChild(el("h3", "block__title", s.title));
-        block.appendChild(el("p", "block__desc", s.description));
-        trackPointer(block);
-        grid.appendChild(reveal(block, i));
-      });
-      services.appendChild(grid);
-    }
-
-    var works = document.getElementById("works");
-    if (works && M.works) {
-      var wh = el("h2", "section__title", M.works.title);
-      wh.id = "works-title";
-      works.setAttribute("aria-labelledby", wh.id);
-      works.appendChild(reveal(wh));
-      if (M.works.description) {
-        works.appendChild(reveal(el("p", "section__desc", M.works.description)));
-      }
-      var wgrid = el("div", "grid grid--two");
-      M.works.items
-        .filter(function (item) {
-          if (M.works.showEmptySlots !== false) return true;
-          // Un emplacement est « rempli » s'il a de quoi afficher un média.
-          return (item.kind === "youtube" && item.videoId) ||
-            (item.kind === "instagram" && item.href);
-        })
-        .forEach(function (item, i) {
-          wgrid.appendChild(reveal(work(item), i));
-        });
-      works.appendChild(wgrid);
-    }
-
-    var contactMount = document.getElementById("contact");
-    if (contactMount && M.contact) {
-      var panel = el("div", "panel");
-      var ch = el("h2", "panel__title", M.contact.title);
-      ch.id = "contact-title";
-      contactMount.setAttribute("aria-labelledby", ch.id);
-      panel.appendChild(ch);
-      if (M.contact.description) {
-        panel.appendChild(el("p", "panel__desc", M.contact.description));
-      }
-
-      var actions = el("div", "actions");
-      if (M.contact.email && M.contact.email.address) {
-        var primary = el("a", "btn btn--accent");
-        var primaryLabel = el("span", "btn__label");
-        var primaryIcon = icon("mail");
-        if (primaryIcon) primaryLabel.appendChild(primaryIcon);
-        primaryLabel.appendChild(document.createTextNode(M.contact.email.label));
-        primary.appendChild(primaryLabel);
-        link(primary, mailtoFrom(M.contact.email));
-        trackPointer(primary);
-        actions.appendChild(primary);
-        actions.appendChild(copyButton(M.contact.email));
-      }
-      panel.appendChild(actions);
-      trackPointer(panel);
-      contactMount.appendChild(reveal(panel));
-    }
-
-    var back = document.getElementById("back");
-    if (back && M.back) {
-      var a = el("a", "backlink");
-      var backIcon = icon("back");
-      if (backIcon) a.appendChild(backIcon);
-      a.appendChild(document.createTextNode(M.back.label));
-      link(a, M.back.href, false);
-      back.appendChild(a);
-    }
+    mount.appendChild(sticker("check", "mint", "top:12%;right:7%", 10));
   }
 
   /* ------------------------------ AIGUILLAGE ----------------------------- */
 
   function start() {
+    renderMarquee();
+    renderNav();
+
     var page = document.body.getAttribute("data-page");
-    if (page === "hub") renderHub();
-    else if (page === "montage") renderMontage();
+    if (page === "hub") {
+      renderHero();
+      renderFeatured();
+      renderProjects();
+    } else if (page === "montage") {
+      renderMontageHero();
+      renderServices();
+      renderWorks();
+      renderContact();
+    }
+
+    renderFooter();
   }
 
   if (document.readyState === "loading") {

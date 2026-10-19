@@ -1,295 +1,216 @@
-# Hub de liens
+# Hub de liens — Forrest The Dump
 
-Site statique, deux pages, aucune dépendance. Pas de build, pas de `npm install` :
-tu ouvres `index.html` dans un navigateur et ça marche.
+Site statique, deux pages, aucun build. Tu ouvres `index.html` dans un
+navigateur et ça marche.
 
 ```
-index.html     le hub (accueil)
-montage.html   page client : montage vidéo / clipping
-style.css      styles communs aux deux pages
-links.js       TOUT le contenu du site (liens, titres, descriptions) + le rendu
-assets/        images, favicon, images de partage
+index.html     l'accueil (identité, montage, projets)
+montage.html   la page client : offre, réalisations, contact
+style.css      tout le style des deux pages
+links.js       TOUT le contenu (liens, titres, descriptions) + le rendu
+assets/        favicon, images de partage
+assets/logos/  les icônes des apps affichées dans les cartes projets
 ```
 
-**Une seule règle à retenir : tout le contenu vit dans `links.js`.** Les fichiers
-`.html` ne contiennent aucun lien ni aucun texte de contenu — juste des
-emplacements vides que `links.js` remplit au chargement.
+**Une seule règle : tout le contenu vit dans `links.js`.** Les `.html` ne
+contiennent aucun texte de contenu — juste des emplacements vides que
+`links.js` remplit au chargement.
 
 ---
 
-## 1. Modifier un lien, un texte, ajouter un projet
+## 1. Le système visuel
 
-Ouvre `links.js`. Tout est dans l'objet `SITE`, en haut du fichier, découpé en
-six sections numérotées et commentées. Chaque endroit à compléter porte un `TODO`.
+Le site suit une logique de **livre de stickers** : fond papier pastel, type
+d'affichage énorme et écrasé, contour noir d'un pixel sur tout ce qui est
+cliquable, palette de six couleurs vives posées comme des autocollants.
 
-### Changer un lien existant
+Trois règles tiennent le reste :
 
-Trouve l'entrée et change son `href`. Exemple, pour donner sa vraie URL à
-TerraTrails :
+1. **Le contour noir est le langage**, pas un repli faute de mieux. Nav,
+   boutons, cartes, stickers : tout est cerné.
+2. **Aucune ombre portée, aucun dégradé.** Le relief vient des bandes de
+   couleur et du ruban bleu.
+3. **Le bleu n'est jamais une couleur d'action.** C'est le ruban, et rien
+   d'autre. Les boutons sont noirs pleins, ou blancs cernés de noir.
+
+Les couleurs sont en haut de `style.css`, dans `:root`. Les six teintes de
+sticker : `--blue`, `--mint`, `--lavender`, `--ember`, `--sunburst`,
+`--violet`. Les trois fonds de bande : `--sky`, `--paper`, `--concrete`.
+
+### Le ruban
+
+Le motif signature. Un tube bleu tracé en SVG dans `links.js`, qui passe
+**derrière** le titre d'affichage. Il est fait de trois tracés superposés —
+le filet noir, le corps bleu, puis un reflet plus clair — et non d'un
+dégradé, qui casserait l'aspect papier découpé.
+
+### Les accents en capitales
+
+L'interligne du titre est à 0,78 : les lignes se touchent, c'est ce qui rend
+le texte sculptural. Problème, en français : l'accent de `É` passe au-dessus
+de la hauteur de capitale, donc derrière la ligne du dessus, et disparaît —
+les deux sont noirs. `links.js` détecte les lignes qui portent une capitale
+accentuée et leur ajoute un filet d'air. Elles seules : le reste du bloc
+reste écrasé.
+
+---
+
+## 2. Modifier le contenu
+
+Tout est dans l'objet `SITE`, en haut de `links.js`.
+
+### Le titre d'accueil
 
 ```js
-{
-  title: "TerraTrails",
-  description: "Randonnées hors des sentiers battus, en SwiftUI.",
-  href: "https://github.com/tonpseudo/terratrails",
-},
+displayLines: ["Forrest", "The", "Dump"],
 ```
 
-Les six projets partent avec `href: "#"`. Un lien resté sur `#` s'affiche en
-grisé — c'est voulu : ça se voit tout de suite, et personne ne clique sur un
-bouton mort sans comprendre pourquoi.
+Une entrée = une ligne. **C'est toi qui décides où ça coupe**, pas le
+navigateur. Même principe pour `featured.title`, `montage.hero.title` et
+`montage.contact.title`.
 
-### Ajouter un projet
-
-Copie n'importe quel bloc `{ … }` du tableau `projects.items`, colle-le, et
-remplis-le. **L'ordre du tableau est l'ordre affiché** : pour faire remonter un
-projet, déplace son bloc plus haut.
+### Le bandeau qui défile
 
 ```js
-projects: {
-  title: "Projets",
-  items: [
-    { title: "TerraTrails", description: "…", href: "https://…" },
-    { title: "Nouveau projet", description: "…", href: "https://…" }, // ← ajouté
-  ],
-},
+marquee: ["Montage vidéo", "Clipping", "Apps iOS", "contact@4restdump.com"],
 ```
 
-Pour retirer un projet : supprime son bloc. Rien d'autre à toucher.
+Entrées courtes. La liste est dupliquée automatiquement pour que la boucle ne
+saute pas.
 
-### Un projet pas encore en ligne
-
-Laisse son `href` vide (`href: ""`). La carte reste affichée, mais elle n'est
-plus cliquable et porte une étiquette **« Bientôt »** au lieu d'un lien mort.
-Dès que tu colles une URL, elle redevient un lien normale sans rien changer
-d'autre. Le champ `tag` (`"iOS · SwiftUI"`, `"Web"`, `"Outil"`…) s'affiche en
-petit sous la description ; laisse-le vide si tu n'en veux pas.
-
-### La pastille « dispo » sous ton nom
+### La pastille « dispo »
 
 ```js
-status: {
-  show: true,
-  label: "Dispo pour de nouveaux projets",
-},
+status: { show: true, label: "Dispo pour de nouveaux projets" },
 ```
 
 Passe `show` à `false` quand tu es complet. Une disponibilité affichée en
-permanence finit par ne plus rien vouloir dire — et un client qui écrit à
-quelqu'un d'indisponible n'écrit qu'une fois.
+permanence ne veut plus rien dire.
 
-### Les icônes des réseaux
+### Un projet
 
-Chaque entrée de `socials` accepte deux champs en plus : `icon` et `handle`.
+```js
+{
+  title: "Kura",
+  description: "Découverte sociale par affinités culturelles : cinéma et musique.",
+  tag: "iOS · SwiftUI",
+  logo: "assets/logos/kura.png",   // facultatif
+  color: "lavender",               // sky, mint, lavender, sun, mist
+  href: "https://thekura.netlify.app/",
+}
+```
 
-| `icon` | rend |
-|---|---|
-| `"youtube"`, `"instagram"`, `"tiktok"`, `"github"` | le logo du réseau |
-| `"mail"`, `"link"` | une enveloppe, un maillon |
+**Un projet sans `href` reste affiché** : carte non cliquable, étiquette
+« Bientôt ». Ça a l'air voulu, alors qu'un lien mort a l'air cassé. Dès que
+tu colles une URL, la carte devient un lien, sans rien d'autre à toucher.
 
-Les icônes sont dessinées dans `links.js`, en SVG : rien n'est téléchargé, et
-elles prennent automatiquement la couleur du texte autour d'elles. `handle`
-(`"@4restdump_"`) s'affiche sous la description — c'est souvent ce à quoi les
-gens te reconnaissent, plus qu'au nom du réseau.
+`color` fait tourner les fonds dans la palette. Évite de mettre la même
+couleur sur deux cartes voisines : aucune teinte ne doit devenir « la »
+couleur des projets.
 
-### Remplir les réalisations (page montage)
+Pour ajouter un logo : dépose un PNG carré dans `assets/logos/` (128 px
+suffit, les cartes l'affichent en 44 px) et mets son chemin dans `logo`. Si
+le fichier manque, le carré disparaît au lieu d'afficher une image cassée.
 
-Le tableau `montage.works.items` contient quatre emplacements. Chacun a un `kind` :
+### Les réalisations (page montage)
 
 | `kind` | Ce qu'il faut remplir | Rendu |
 |---|---|---|
 | `"youtube"` | `videoId` | lecteur YouTube intégré |
-| `"instagram"` | `href` (URL du reel) et, si tu veux, `thumb` | vignette cliquable |
-| autre / vide | rien | cadre en pointillés « Emplacement libre » |
+| `"instagram"` | `href`, et `thumb` si tu veux | vignette cliquable |
+| vide | rien | cadre gris « emplacement libre » |
 
-L'identifiant d'une vidéo YouTube est ce qui suit `v=` dans son URL :
-dans `https://www.youtube.com/watch?v=aqz-KE-bpKQ`, c'est `aqz-KE-bpKQ`.
+L'identifiant d'une vidéo YouTube est ce qui suit `v=` dans son URL : dans
+`https://www.youtube.com/watch?v=aqz-KE-bpKQ`, c'est `aqz-KE-bpKQ`.
 
-Pour Instagram il n'y a pas d'intégration possible sans charger leurs scripts de
-suivi. On affiche donc une vignette cliquable : dépose une image dans `assets/`
-(une frame de ton reel) et mets son chemin dans `thumb`, par exemple
-`thumb: "assets/reel-1.jpg"`. Sans `thumb`, la tuile reste sobre et seul le
-libellé « Voir sur Instagram » s'affiche — ça fonctionne aussi.
+Instagram n'autorise pas l'intégration sans charger ses scripts de suivi : on
+affiche donc une vignette cliquable, sans tracker.
 
-Tu peux mettre plus ou moins de quatre réalisations : ajoute ou retire des blocs,
-la grille s'adapte.
+**Avant d'envoyer le lien à un client**, passe `showEmptySlots` à `false`
+dans `montage.works` : les cadres vides disparaissent.
 
-Tant que tu remplis la page, les emplacements vides restent visibles en
-pointillés pour que tu voies ce qu'il te reste à faire. **Avant d'envoyer le
-lien à un client, passe `showEmptySlots` à `false`** dans `montage.works` : les
-cadres vides disparaissent, et il ne reste que les réalisations réelles.
+### L'adresse de contact
 
-### Ton avatar sur le hub
-
-Le hub démarre sans photo. Dépose ton image dans `assets/avatar.png` puis, dans
-`links.js`, passe `profile.avatar.show` à `true`.
-
-### Ton e-mail de contact
-
-`montage.contact.email.address` vaut `contact@exemple.com` : remplace-le par
-l'adresse que tu acceptes de rendre publique. C'est un `mailto:`, donc l'adresse
-sera visible dans le code source de la page — utilise une adresse dédiée si tu
-préfères garder ta boîte principale à l'abri.
-
-**C'est la seule chose vraiment obligatoire avant de partager le lien.**
-
-À côté du bouton `mailto:`, la page affiche un bouton **« Copier l'adresse »**.
-Il sert sur mobile, où `mailto:` ouvre parfois une application que personne
-n'utilise. Ses deux libellés se règlent dans `copyLabel` et `copiedLabel`.
-
-La barre haute de la page montage se règle dans `montage.topbar` : le nom
-affiché, le lien de retour et le libellé du bouton de contact.
-
-### La seule chose qui n'est PAS dans links.js
-
-Les balises `<title>`, `<meta name="description">` et Open Graph, qui restent
-écrites dans les deux `.html`. Ce n'est pas un oubli : les robots de Facebook,
-Instagram, WhatsApp, iMessage, X et Discord **ne lancent pas le JavaScript**.
-Une balise injectée depuis `links.js` serait invisible pour eux, et l'aperçu de
-ton lien partagé sortirait vide — précisément le cas qui compte quand tu mets ce
-lien dans ta bio Instagram.
-
-Ces balises sont regroupées en haut de chaque fichier, dans un bloc commenté.
-Trois choses à y faire une fois pour toutes, avant de partager le lien :
-
-1. remplacer `https://4restdump.vercel.app` par ton vrai domaine (`og:url`, `canonical`) ;
-2. remplacer `assets/og-image.png` et `assets/og-montage.png` par tes propres
-   images, en **1200 × 630 px** (celles fournies sont des placeholders unis) ;
-3. garder l'URL de l'image **absolue** (`https://tondomaine.com/assets/…`) : les
-   robots ne résolvent pas les chemins relatifs.
-
-Après un changement de ces balises, les réseaux gardent l'ancien aperçu en cache.
-Pour forcer la mise à jour : [Facebook Sharing Debugger](https://developers.facebook.com/tools/debug/)
-et [X Card Validator](https://cards-dev.twitter.com/validator).
-
-### Changer les couleurs
-
-Tout en haut de `style.css`, dans le bloc `:root`. Une seule variable à changer
-pour reteindre le site : `--accent`. Le fond, les bordures et les gris en
-découlent séparément et sont commentés un par un.
+`montage.contact.email.address` est publique : elle est lisible dans le code
+source de la page, comme toute adresse en `mailto:`. À côté du bouton mail,
+un bouton **« Copier l'adresse »** — utile sur mobile, où `mailto:` ouvre
+parfois une application que personne n'utilise.
 
 ---
 
-## 2. Déployer sur Vercel depuis un repo GitHub
+## 3. Ce que le site charge
 
-Le site est purement statique : il n'y a rien à compiler et aucune variable
-d'environnement à configurer.
+Deux polices, depuis Google Fonts : **Anton** pour l'affichage, **Inter**
+pour l'interface. Ce sont les deux seules ressources externes du site, et
+elles sont nécessaires : le caractère du design tient à cette typographie, et
+aucune police système n'a cette graisse.
 
-**a. Mettre le dossier sur GitHub**
+Tout le reste est local : le CSS, le JS, les logos, les stickers et le ruban
+(dessinés en SVG dans `links.js`). Aucun tracker, aucun cookie, aucun CDN de
+script.
+
+Si tu veux un site strictement sans requête externe, retire les trois balises
+`<link>` des deux `.html` : la mise en page tient, mais le titre retombe sur
+une police système et perd l'essentiel de son caractère.
+
+Une seule exception à « rien d'externe » côté contenu : le lecteur YouTube
+des réalisations, quand tu renseignes un `videoId`. Il passe par
+`youtube-nocookie.com`, en chargement différé — rien n'est demandé à YouTube
+tant que la tuile n'est pas à l'écran.
+
+---
+
+## 4. Ce qui bouge
+
+Volontairement presque rien : le site se lit comme un collage imprimé.
+
+- **Le bandeau défile**, en boucle continue.
+- **Les boutons réagissent** au survol (inversion noir/blanc) et à la
+  pression (1 px vers le bas).
+- **Les cartes de projet** se décalent de 2 px au survol.
+
+`prefers-reduced-motion` arrête le bandeau et coupe les transitions.
+`prefers-contrast: more` épaissit les filets à 2 px.
+
+---
+
+## 5. Déployer
+
+Le site est purement statique : rien à compiler, aucune variable
+d'environnement.
+
+**Mettre à jour ce qui est déjà en ligne**
 
 ```bash
-cd link-hub
-git init
-git add .
-git commit -m "Hub de liens"
-```
-
-Crée un repo vide sur GitHub (sans README, sans .gitignore), puis :
-
-```bash
-git remote add origin https://github.com/TON-PSEUDO/TON-REPO.git
-git branch -M main
-git push -u origin main
-```
-
-**b. Importer dans Vercel**
-
-1. [vercel.com](https://vercel.com) → connexion avec GitHub.
-2. **Add New… → Project**, puis **Import** sur ton repo.
-3. Écran de configuration : **ne touche à rien.**
-   - Framework Preset : `Other`
-   - Build Command : **vide**
-   - Output Directory : **vide** (ou `.`)
-   - Root Directory : la racine, sauf si `index.html` est dans un sous-dossier —
-     dans ce cas indique ce sous-dossier (par exemple `link-hub`).
-4. **Deploy**. Une trentaine de secondes plus tard tu as une URL en
-   `ton-projet.vercel.app`.
-
-**c. Mettre à jour le site**
-
-Chaque `git push` sur `main` redéploie automatiquement. Le cycle normal est donc :
-tu édites `links.js`, tu vérifies en ouvrant `index.html` en local, tu pousses.
-
-```bash
-git add links.js
-git commit -m "Ajoute l'URL de TerraTrails"
+git add -A
+git commit -m "Change le contenu"
 git push
 ```
 
----
+Chaque `push` sur `main` redéploie, si le projet Vercel est branché sur le
+dépôt.
 
-## 3. Brancher un nom de domaine perso
+**GitHub Pages**, en copiant le dossier dans un dépôt Pages :
 
-**a. Acheter le domaine** chez n'importe quel registrar (OVH, Namecheap,
-Cloudflare, Gandi…). Vercel en vend aussi, ce qui évite toute manipulation DNS.
+```bash
+rsync -a index.html montage.html style.css links.js assets \
+  ~/Documents/GitHub/noahlaz210.github.io/link-hub/
+git -C ~/Documents/GitHub/noahlaz210.github.io add link-hub
+git -C ~/Documents/GitHub/noahlaz210.github.io commit -m "Met à jour le hub"
+git -C ~/Documents/GitHub/noahlaz210.github.io push
+```
 
-**b. Le déclarer dans Vercel** : ton projet → **Settings → Domains → Add**, puis
-saisis `tondomaine.com`. Vercel affiche alors les enregistrements à créer.
+**Brancher un domaine perso** : achète-le chez n'importe quel registrar, puis
+dans Vercel → **Settings → Domains → Add**. Vercel affiche les enregistrements
+DNS à créer et émet le certificat HTTPS tout seul.
 
-**c. Créer les enregistrements DNS** chez ton registrar :
+N'oublie pas de remplacer `https://4restdump.vercel.app` par ton domaine dans
+`canonical`, `og:url` et les URL d'images, en haut des deux `.html`. Ces
+balises restent écrites en dur : les robots de Facebook, Instagram, WhatsApp,
+iMessage, X et Discord **ne lancent pas le JavaScript**, donc une balise
+injectée par `links.js` serait invisible pour eux et l'aperçu du lien partagé
+sortirait vide.
 
-| Type | Nom | Valeur |
-|---|---|---|
-| `A` | `@` | `76.76.21.21` |
-| `CNAME` | `www` | `cname.vercel-dns.com` |
-
-Prends toujours les valeurs affichées par Vercel plutôt que ce tableau : ce sont
-celles de ton projet, et elles peuvent changer.
-
-Autre possibilité, si ton registrar le permet : déléguer les serveurs de noms
-(nameservers) à Vercel. Tu n'as alors plus aucun enregistrement à gérer à la main.
-
-**d. Attendre la propagation** — quelques minutes en général, jusqu'à 48 h dans
-le pire des cas. Vercel émet le certificat HTTPS tout seul, gratuitement.
-
-**e. Choisir la version canonique** : dans **Domains**, décide si `www` redirige
-vers le domaine nu ou l'inverse, et garde une seule des deux formes comme
-principale.
-
-**f. Ne pas oublier** de repasser dans `index.html` et `montage.html` remplacer
-`https://4restdump.vercel.app` par ton domaine réel, dans `canonical`, `og:url` et les
-URL d'images de partage. Tant que tu ne l'as pas fait, l'aperçu du lien partagé
-pointera vers un domaine d'exemple.
-
----
-
-## 4. Ce que le site fait tout seul
-
-Rien de tout ça n'est à configurer, mais autant savoir que ça existe.
-
-- **Les cartes suivent le curseur.** Un halo se déplace sous la souris, et
-  s'éteint tout seul sur un écran tactile — aucun calcul n'est fait pour rien.
-- **Les blocs arrivent quand ils entrent à l'écran**, décalés de 45 ms les uns
-  sur les autres. Le contenu est déjà là, déjà lisible, déjà cliquable : c'est
-  purement décoratif.
-- **Les animations sont des ressorts**, décrits par deux réglages —
-  l'amortissement et la réponse — plutôt que par une durée. Ils sont écrits en
-  CSS (`linear()`) et tournent hors du fil principal : aucune librairie.
-- **Le passage d'une page à l'autre est enchaîné** (View Transitions) : ton nom
-  glisse du hub vers la barre de la page montage au lieu de disparaître. Là où
-  le navigateur ne connaît pas encore l'API, la navigation reste celle d'avant.
-- **Trois réglages système sont respectés** : « réduire les animations »
-  (tout devient un fondu court), « réduire la transparence » (la barre haute
-  devient opaque) et « contraste élevé » (les filets se renforcent, les halos
-  s'éteignent).
-- **Sans JavaScript**, le texte reste visible : rien n'est caché en attendant
-  une animation.
-
----
-
-## Ce que ce site ne fait pas
-
-Volontairement, et ça n'est pas près de changer :
-
-- **aucun tracker, aucun script tiers, aucun CDN.** Le hub ne fait que trois
-  requêtes : le HTML, le CSS et le JS. Rien d'externe.
-- **aucune police téléchargée.** Uniquement la police système (SF Pro sur
-  iPhone et Mac, Segoe UI sur Windows, Roboto sur Android) : rien à charger,
-  donc rien qui clignote au premier affichage.
-- **aucun formulaire, aucun backend.** Le contact passe par `mailto:` et par
-  les DM Instagram.
-- **une seule exception à la règle « rien d'externe » :** le lecteur YouTube des
-  réalisations, quand tu renseignes un `videoId`. Il passe par
-  `youtube-nocookie.com` et en chargement différé (`loading="lazy"`) — donc rien
-  n'est demandé à YouTube tant que la tuile n'est pas à l'écran. Le hub, lui,
-  reste totalement autonome.
+Après un changement de ces balises, les réseaux gardent l'ancien aperçu en
+cache. Pour forcer la mise à jour :
+[Facebook Sharing Debugger](https://developers.facebook.com/tools/debug/).
