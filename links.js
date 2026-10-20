@@ -204,7 +204,7 @@ const SITE = {
     works: {
       title: "Réalisations",
       intro: "Une sélection. Le reste est sur les chaînes des artistes.",
-      showEmptySlots: true,
+      showEmptySlots: false,
       items: [
         {
           kind: "instagram",
