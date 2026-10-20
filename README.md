@@ -8,8 +8,9 @@ index.html     l'accueil (identité, montage, projets)
 montage.html   la page client : offre, réalisations, contact
 style.css      tout le style des deux pages
 links.js       TOUT le contenu (liens, titres, descriptions) + le rendu
-assets/        favicon, images de partage
+assets/        photo de profil, icônes du site, images de partage
 assets/logos/  les icônes des apps affichées dans les cartes projets
+assets/works/  les vignettes des réalisations
 ```
 
 **Une seule règle : tout le contenu vit dans `links.js`.** Les `.html` ne
@@ -112,16 +113,33 @@ Pour ajouter un logo : dépose un PNG carré dans `assets/logos/` (128 px
 suffit, les cartes l'affichent en 44 px) et mets son chemin dans `logo`. Si
 le fichier manque, le carré disparaît au lieu d'afficher une image cassée.
 
-### Les artistes (page montage)
+### Les réalisations et les chaînes (page montage)
 
-Pas de galerie de vidéos : les montages vivent sur les chaînes des artistes,
-c'est donc là qu'on envoie.
+La section montre une sélection à gauche, et les chaînes des artistes dans
+une colonne à droite : ce qu'on voit ici, et où aller voir le reste.
+
+| `kind` | Ce qu'il faut remplir | Rendu |
+|---|---|---|
+| `"youtube"` | `videoId` | lecteur YouTube intégré |
+| `"instagram"` | `href`, et `thumb` si tu veux | vignette cliquable |
+| vide | rien | cadre gris « emplacement libre » |
+
+L'identifiant d'une vidéo YouTube est ce qui suit `v=` dans son URL : dans
+`https://www.youtube.com/watch?v=aqz-KE-bpKQ`, c'est `aqz-KE-bpKQ`.
+
+Instagram n'autorise pas l'intégration sans charger ses scripts de suivi :
+on affiche donc une vignette cliquable, sans tracker. Dépose une image dans
+`assets/works/` et mets son chemin dans `thumb`.
+
+**Quand la grille est remplie**, passe `showEmptySlots` à `false` : les
+cadres vides disparaissent.
+
+Les chaînes de la colonne vivent dans `montage.artists` :
 
 ```js
 {
   name: "FuegoFeu",
   note: "Clips et formats courts",
-  image: "assets/works/fuego-cash-crime.jpg",  // facultatif
   color: "sun",
   links: [
     { label: "YouTube", href: "https://www.youtube.com/@fuegofeu", primary: true },
@@ -129,9 +147,6 @@ c'est donc là qu'on envoie.
   ],
 }
 ```
-
-L'image est facultative : sans elle, la carte reste une carte, et elle ne
-s'étire pas pour rattraper sa voisine.
 
 ### L'adresse de contact
 

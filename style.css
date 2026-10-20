@@ -239,6 +239,9 @@ button {
 .nav__mark {
   display: grid;
   place-items: center;
+  flex: none;
+  object-fit: cover;
+  overflow: hidden;
   width: 34px;
   height: 34px;
   border: var(--line);
@@ -605,14 +608,32 @@ a.card:active {
   white-space: nowrap;
 }
 
-/* La photo de profil : un cercle cerné de noir, comme un sticker découpé. */
-.avatar {
-  width: 112px;
-  height: 112px;
-  margin-bottom: var(--s-5);
-  border: var(--line);
-  border-radius: var(--r-pill);
-  object-fit: cover;
+/* Les réalisations à gauche, les chaînes dans une colonne à droite. */
+.works-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--s-8);
+}
+
+.channels {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+}
+
+.channels__title {
+  font-family: var(--font-display);
+  font-size: var(--t-subheading);
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+@media (min-width: 900px) {
+  .works-layout {
+    grid-template-columns: minmax(0, 1fr) 270px;
+    gap: var(--s-10);
+    align-items: start;
+  }
 }
 
 /* L'image d'une carte artiste : format vertical, comme le reel dont elle

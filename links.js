@@ -197,16 +197,34 @@ const SITE = {
       ],
     },
 
-    // Pas de galerie : les montages vivent sur les chaînes des artistes,
-    // c'est donc là qu'on envoie.
+    /* kind: "youtube"   → videoId = ce qui suit « v= » dans l'URL de la vidéo.
+       kind: "instagram" → href = l'URL du post, thumb = une image dans assets/.
+       Sans videoId ni href, l'emplacement s'affiche en gris clair.
+       Passe showEmptySlots à false quand la grille est remplie. */
+    works: {
+      title: "Réalisations",
+      intro: "Une sélection. Le reste est sur les chaînes des artistes.",
+      showEmptySlots: true,
+      items: [
+        {
+          kind: "instagram",
+          href: "https://www.instagram.com/reel/DeguuDvIl0-/",
+          thumb: "assets/works/fuego-cash-crime.jpg",
+          title: "Fuego × Cash Crime",
+          caption: "Clip — Rentre dans le Cercle (BTS) · 2026",
+        },
+        { kind: "youtube", videoId: "", title: "Fuego", caption: "Clip · 2026" },     // TODO : videoId
+        { kind: "youtube", videoId: "", title: "Used2that", caption: "Clip · 2026" }, // TODO : videoId
+      ],
+    },
+
+    // Les chaînes, en colonne à côté des réalisations.
     artists: {
-      title: "Avec qui je travaille",
-      intro: "Les chaînes des artistes pour qui je monte.",
+      title: "Les chaînes",
       items: [
         {
           name: "FuegoFeu",
           note: "Clips et formats courts",
-          image: "assets/works/fuego-cash-crime.jpg",
           color: "sun",
           links: [
             { label: "YouTube", href: "https://www.youtube.com/@fuegofeu", primary: true },
@@ -393,8 +411,27 @@ const SITE = {
 
     var brand = el("a", "nav__brand");
     link(brand, SITE.nav.homeHref);
-    var mark = el("span", "nav__mark", SITE.profile.monogram);
-    mark.setAttribute("aria-hidden", "true");
+
+    // Le badge rond porte la photo si elle est fournie, et retombe sur le
+    // monogramme sinon — y compris si le fichier manque au chargement.
+    var av = SITE.profile.avatar;
+    var mark;
+    if (av && av.show && av.src) {
+      mark = el("img", "nav__mark");
+      mark.src = av.src;
+      mark.alt = av.alt || SITE.profile.name;
+      mark.width = 34;
+      mark.height = 34;
+      mark.decoding = "async";
+      mark.addEventListener("error", function () {
+        var fallback = el("span", "nav__mark", SITE.profile.monogram);
+        fallback.setAttribute("aria-hidden", "true");
+        mark.replaceWith(fallback);
+      });
+    } else {
+      mark = el("span", "nav__mark", SITE.profile.monogram);
+      mark.setAttribute("aria-hidden", "true");
+    }
     brand.appendChild(mark);
     brand.appendChild(document.createTextNode(SITE.profile.name));
     mount.appendChild(brand);
@@ -448,20 +485,6 @@ const SITE = {
     var inner = el("div", "band__inner");
 
     var p = SITE.profile;
-
-    if (p.avatar && p.avatar.show && p.avatar.src) {
-      var photo = el("img", "avatar");
-      photo.src = p.avatar.src;
-      photo.alt = p.avatar.alt || "";
-      photo.width = 120;
-      photo.height = 120;
-      photo.decoding = "async";
-      // Sans la photo, on ne laisse pas un cadre vide.
-      photo.addEventListener("error", function () {
-        photo.remove();
-      });
-      inner.appendChild(photo);
-    }
 
     if (p.status && p.status.show) {
       var pill = el("p", "status");
@@ -692,24 +715,101 @@ const SITE = {
     return node;
   }
 
-  function renderArtists() {
+  /** Une tuile de la grille « Réalisations ». */
+  function workTile(item) {
+    var figure = el("figure", "work");
+
+    if (item.kind === "youtube" && item.videoId) {
+      var frame = el("div", "work__media");
+      var iframe = document.createElement("iframe");
+      // youtube-nocookie : aucun cookie publicitaire posé avant lecture.
+      iframe.src =
+        "https://www.youtube-nocookie.com/embed/" + encodeURIComponent(item.videoId) + "?rel=0";
+      iframe.title = item.title || "Vidéo";
+      iframe.loading = "lazy";
+      iframe.allow = "accelerometer; clipboard-write; encrypted-media; picture-in-picture";
+      iframe.allowFullscreen = true;
+      iframe.setAttribute("referrerpolicy", "strict-origin-when-cross-origin");
+      frame.appendChild(iframe);
+      figure.appendChild(frame);
+    } else if (item.kind === "instagram" && item.href) {
+      var a = el("a", "work__media work__media--vertical");
+      link(a, item.href);
+      if (item.thumb) {
+        var img = el("img");
+        img.src = item.thumb;
+        img.alt = item.title || "";
+        img.loading = "lazy";
+        img.style.cssText = "width:100%;height:100%;object-fit:cover";
+        img.addEventListener("error", function () {
+          img.remove();
+          a.classList.add("work__empty");
+        });
+        a.appendChild(img);
+      } else {
+        a.classList.add("work__empty");
+      }
+      a.appendChild(el("span", "work__badge", "Voir sur Instagram"));
+      figure.appendChild(a);
+    } else {
+      var slot = el("div", "work__media work__empty");
+      slot.appendChild(el("span", null, "Emplacement libre"));
+      figure.appendChild(slot);
+    }
+
+    var caption = el("figcaption");
+    if (item.title) caption.appendChild(el("span", "work__title", item.title));
+    if (item.caption) {
+      caption.appendChild(document.createElement("br"));
+      caption.appendChild(el("span", "work__meta", item.caption));
+    }
+    figure.appendChild(caption);
+    return figure;
+  }
+
+  /**
+   * Les réalisations, et les chaînes des artistes dans une colonne à côté :
+   * une sélection montrée ici, et où aller voir le reste.
+   */
+  function renderWorks() {
     var mount = document.getElementById("works");
-    if (!mount || !SITE.montage.artists) return;
-    var A = SITE.montage.artists;
+    var W = SITE.montage.works;
+    if (!mount || !W) return;
     mount.className = "band band--concrete";
 
     var inner = el("div", "band__inner");
     var head = el("div");
     head.style.marginBottom = "var(--s-10)";
-    head.appendChild(el("h2", "heading", A.title));
-    if (A.intro) head.appendChild(el("p", "lede", A.intro));
+    head.appendChild(el("h2", "heading", W.title));
+    if (W.intro) head.appendChild(el("p", "lede", W.intro));
     inner.appendChild(head);
 
-    var grid = el("div", "grid grid--artists");
-    A.items.forEach(function (item) {
-      grid.appendChild(artistCard(item));
-    });
-    inner.appendChild(grid);
+    var layout = el("div", "works-layout");
+
+    var grid = el("div", "works");
+    W.items
+      .filter(function (item) {
+        if (W.showEmptySlots !== false) return true;
+        return (item.kind === "youtube" && item.videoId) ||
+          (item.kind === "instagram" && item.href);
+      })
+      .forEach(function (item) {
+        grid.appendChild(workTile(item));
+      });
+    layout.appendChild(grid);
+
+    var A = SITE.montage.artists;
+    if (A && A.items && A.items.length) {
+      var aside = el("aside", "channels");
+      aside.setAttribute("aria-label", A.title);
+      aside.appendChild(el("h3", "channels__title", A.title));
+      A.items.forEach(function (item) {
+        aside.appendChild(artistCard(item));
+      });
+      layout.appendChild(aside);
+    }
+
+    inner.appendChild(layout);
     mount.appendChild(inner);
   }
 
@@ -796,7 +896,7 @@ const SITE = {
     } else if (page === "montage") {
       renderMontageHero();
       renderServices();
-      renderArtists();
+      renderWorks();
       renderContact();
     }
 
