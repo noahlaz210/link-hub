@@ -522,6 +522,7 @@ button {
 
 .card {
   position: relative;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   gap: var(--s-3);
@@ -602,6 +603,54 @@ a.card:active {
   letter-spacing: var(--tracking-label);
   text-transform: uppercase;
   white-space: nowrap;
+}
+
+/* La photo de profil : un cercle cerné de noir, comme un sticker découpé. */
+.avatar {
+  width: 112px;
+  height: 112px;
+  margin-bottom: var(--s-5);
+  border: var(--line);
+  border-radius: var(--r-pill);
+  object-fit: cover;
+}
+
+/* L'image d'une carte artiste : format vertical, comme le reel dont elle
+   est tirée. */
+.artist__image {
+  margin: calc(var(--s-6) * -1) calc(var(--s-6) * -1) 0;
+  border-bottom: var(--line);
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+}
+
+.artist__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.grid--artists {
+  grid-template-columns: 1fr;
+  /* Chaque carte garde sa hauteur : sans ça, celle qui n'a pas d'image
+     s'étire pour rattraper sa voisine et sonne vide. */
+  align-items: start;
+}
+
+@media (min-width: 640px) {
+  .grid--artists {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Un lien qui ne porte qu'un logo : carré, pas de libellé à aligner. */
+.pill--icon {
+  padding: 0.55rem;
+}
+
+.pill--icon svg {
+  width: 18px;
+  height: 18px;
 }
 
 /* La rangée de liens d'une carte qui en porte plusieurs. */

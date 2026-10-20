@@ -23,6 +23,12 @@ const SITE = {
     displayLines: ["Forrest", "The", "Dump"],
     tagline: "Je monte des clips et je construis des apps iOS.",
     monogram: "4D",
+    // La photo du hero. Carrée : elle est affichée dans un cercle.
+    avatar: {
+      show: true,
+      src: "assets/avatar.jpg",
+      alt: "Forrest The Dump, bras ouverts devant un lac",
+    },
     status: {
       show: true,
       label: "Dispo pour de nouveaux projets",
@@ -35,7 +41,7 @@ const SITE = {
     "Clipping",
     "Formats courts",
     "Apps iOS",
-    "contact@4restdump.com",
+    "noahlazennec@gmail.com",
   ],
 
   // La barre de navigation, identique sur les deux pages.
@@ -79,71 +85,68 @@ const SITE = {
      ------------------------------------------------------------------------ */
   projects: {
     title: "Projets",
-    intro: "Des apps iOS écrites en SwiftUI, de l'idée au TestFlight.",
+    intro: "Des apps iOS, de l'idée au TestFlight.",
     items: [
       {
         title: "Kura",
-        description: "Découverte sociale par affinités culturelles : cinéma et musique. Sur l'App Store.",
-        tag: "iOS · SwiftUI",
+        description: "Découverte sociale par affinités culturelles : cinéma et musique.",
         logo: "assets/logos/kura.png",
         color: "lavender",
-        // Plusieurs liens : la carte cesse d'être un lien et affiche une
-        // rangée de pilules. Un lien dans un lien n'est pas du HTML valide.
+        // Le premier lien est le bouton principal. `icon` remplace le
+        // libellé par un logo : un réseau n'a pas besoin d'être écrit.
         links: [
+          { label: "App Store", href: "https://apps.apple.com/fr/app/id6811449545", primary: true },
           { label: "thekura.app", href: "https://thekura.app" },
-          { label: "App Store", href: "https://apps.apple.com/fr/app/id6811449545" },
-          { label: "Instagram", href: "https://www.instagram.com/thekura.app/" },
+          { icon: "instagram", href: "https://www.instagram.com/thekura.app/" },
+        ],
+      },
+      {
+        title: "Mention",
+        description: "Moyennes, paliers et projections : la mention que tu peux viser, calculée à l'avance.",
+        logo: "assets/logos/mention.png",
+        color: "sun",
+        links: [
+          { label: "App Store", href: "https://apps.apple.com/fr/app/mention/id6813231243", primary: true },
         ],
       },
       {
         title: "TerraTrails",
         description: "Décrire, générer, partir : l'itinéraire de rando se construit à partir de ta description.",
-        tag: "iOS · SwiftUI",
         logo: "assets/logos/terratrails.png",
         color: "mint",
-        href: "", // TODO : le site est prêt en local, colle son URL une fois en ligne.
+        links: [
+          { label: "terratrails.vercel.app", href: "https://terratrails.vercel.app/", primary: true },
+          { icon: "instagram", href: "https://www.instagram.com/terratrails.fr/" },
+        ],
       },
       {
         title: "Bloked",
         description: "Tu déclares tes tâches la veille ; le lendemain, tes applis restent bloquées jusqu'à ce que tu les coches.",
-        tag: "iOS",
         logo: "assets/logos/bloked.png",
         color: "sky",
         href: "", // TODO
       },
       {
-        title: "Mention",
-        description: "Moyennes, paliers et projections : la mention que tu peux viser, calculée à l'avance. Sur l'App Store.",
-        tag: "iOS",
-        logo: "assets/logos/mention.png",
-        color: "sun",
-        href: "https://apps.apple.com/fr/app/mention/id6813231243",
-      },
-      {
         title: "Manifest",
         description: "Information collaborative sur les manifestations en France : carte, guides, compteur de foule et fiabilité affichée.",
-        tag: "iOS · SwiftUI",
         color: "mist",
         href: "", // TODO
       },
       {
         title: "Uruk",
         description: "Exploration urbaine et connexion sociale : découvrir sa ville autrement, et les gens qui y traînent.",
-        tag: "iOS",
         color: "lavender",
         href: "", // TODO
       },
       {
         title: "Wearther",
         description: "Quoi mettre aujourd'hui : la météo croisée avec ton agenda et les endroits où tu dois aller.",
-        tag: "iOS",
         color: "sky",
         href: "", // TODO
       },
       {
         title: "Onyx",
         description: "Finances perso : transactions, plan d'épargne et conseils avant un achat.",
-        tag: "iOS",
         color: "mint",
         href: "", // TODO
       },
@@ -194,24 +197,31 @@ const SITE = {
       ],
     },
 
-    /* kind: "youtube"   → videoId = ce qui suit « v= » dans l'URL de la vidéo.
-       kind: "instagram" → href = l'URL du reel, thumb = une image dans assets/.
-       Sans videoId ni href, l'emplacement s'affiche en gris clair.
-       Passe showEmptySlots à false avant d'envoyer le lien à un client. */
-    works: {
-      title: "Réalisations",
-      intro: "Une sélection. Le reste est sur mes réseaux.",
-      showEmptySlots: true,
+    // Pas de galerie : les montages vivent sur les chaînes des artistes,
+    // c'est donc là qu'on envoie.
+    artists: {
+      title: "Avec qui je travaille",
+      intro: "Les chaînes des artistes pour qui je monte.",
       items: [
         {
-          kind: "instagram",
-          href: "https://www.instagram.com/reel/DeguuDvIl0-/",
-          thumb: "assets/works/fuego-cash-crime.jpg",
-          title: "Fuego × Cash Crime",
-          caption: "Clip — Rentre dans le Cercle (BTS) · 2026",
+          name: "FuegoFeu",
+          note: "Clips et formats courts",
+          image: "assets/works/fuego-cash-crime.jpg",
+          color: "sun",
+          links: [
+            { label: "YouTube", href: "https://www.youtube.com/@fuegofeu", primary: true },
+            { icon: "instagram", href: "https://www.instagram.com/fuego.feu/" },
+          ],
         },
-        { kind: "youtube", videoId: "", title: "Fuego", caption: "Clip · 2026" },     // TODO : videoId
-        { kind: "youtube", videoId: "", title: "Used2that", caption: "Clip · 2026" }, // TODO : videoId
+        {
+          name: "used2that",
+          note: "Clips et formats courts",
+          color: "lavender",
+          links: [
+            { label: "YouTube", href: "https://www.youtube.com/@used2that", primary: true },
+            { icon: "instagram", href: "https://www.instagram.com/used2that/" },
+          ],
+        },
       ],
     },
 
@@ -219,7 +229,7 @@ const SITE = {
       title: ["Travailler", "ensemble"],
       description: "Le format, la durée, la deadline. Je réponds avec un prix et un délai.",
       email: {
-        address: "contact@4restdump.com",
+        address: "noahlazennec@gmail.com",
         subject: "Projet de montage — Forrest The Dump",
         label: "M'écrire",
         copyLabel: "Copier l'adresse",
@@ -272,17 +282,52 @@ const SITE = {
     heart: "M12 21S2.8 15.5 2.8 9.4A4.6 4.6 0 0 1 12 7.2a4.6 4.6 0 0 1 9.2 2.2C21.2 15.5 12 21 12 21z",
     check: "M9.5 16.2 5.3 12l-1.4 1.4 5.6 5.6L20.1 8.4 18.7 7 9.5 16.2z",
     clap: "M2.6 7.3 21 4l.5 3L3.1 10.3l-.5-3zM3 12h18v8H3v-8z",
+    instagram: [
+      "M12 7.6a4.4 4.4 0 1 0 0 8.8 4.4 4.4 0 0 0 0-8.8Zm0 7.2a2.8 2.8 0 1 1 0-5.6 2.8 2.8 0 0 1 0 5.6Z",
+      "M16.7 6.2a1 1 0 1 0 0 2.1 1 1 0 0 0 0-2.1Z",
+      "M16.5 3h-9A4.5 4.5 0 0 0 3 7.5v9A4.5 4.5 0 0 0 7.5 21h9a4.5 4.5 0 0 0 4.5-4.5v-9A4.5 4.5 0 0 0 16.5 3Zm2.9 13.5a2.9 2.9 0 0 1-2.9 2.9h-9a2.9 2.9 0 0 1-2.9-2.9v-9a2.9 2.9 0 0 1 2.9-2.9h9a2.9 2.9 0 0 1 2.9 2.9v9Z",
+    ],
+    youtube:
+      "M21.6 7.2a2.8 2.8 0 0 0-2-2C17.9 4.7 12 4.7 12 4.7s-5.9 0-7.6.5a2.8 2.8 0 0 0-2 2C2 8.9 2 12 2 12s0 3.1.4 4.8a2.8 2.8 0 0 0 2 2c1.7.5 7.6.5 7.6.5s5.9 0 7.6-.5a2.8 2.8 0 0 0 2-2c.4-1.7.4-4.8.4-4.8s0-3.1-.4-4.8ZM10.2 15.3V8.7l5.4 3.3-5.4 3.3Z",
   };
+
+  // Le nom lisible d'un logo, pour les lecteurs d'écran.
+  var GLYPH_NAMES = { instagram: "Instagram", youtube: "YouTube", tiktok: "TikTok" };
 
   function glyph(name) {
     var svg = document.createElementNS(SVG, "svg");
     svg.setAttribute("viewBox", "0 0 24 24");
     svg.setAttribute("fill", "currentColor");
     svg.setAttribute("aria-hidden", "true");
-    var path = document.createElementNS(SVG, "path");
-    path.setAttribute("d", GLYPHS[name] || GLYPHS.star);
-    svg.appendChild(path);
+    var d = GLYPHS[name] || GLYPHS.star;
+    (Array.isArray(d) ? d : [d]).forEach(function (segment) {
+      var path = document.createElementNS(SVG, "path");
+      path.setAttribute("d", segment);
+      svg.appendChild(path);
+    });
     return svg;
+  }
+
+  /**
+   * Une rangée de liens. Le premier est le bouton principal — noir plein ;
+   * un lien marqué `icon` ne porte que son logo, et son nom part dans
+   * aria-label pour les lecteurs d'écran.
+   */
+  function linkRow(entries, context) {
+    var row = el("div", "card__links");
+    entries.forEach(function (entry) {
+      var pill = el("a", "pill" + (entry.primary ? " pill--filled" : "") + (entry.icon ? " pill--icon" : ""));
+      if (entry.icon) {
+        pill.appendChild(glyph(entry.icon));
+        pill.setAttribute("aria-label", (GLYPH_NAMES[entry.icon] || entry.icon) + " — " + context);
+      } else {
+        pill.textContent = entry.label;
+        pill.setAttribute("aria-label", entry.label + " — " + context);
+      }
+      link(pill, entry.href);
+      row.appendChild(pill);
+    });
+    return row;
   }
 
   /** Un sticker : carré arrondi, cerné de noir, posé de travers. */
@@ -403,6 +448,21 @@ const SITE = {
     var inner = el("div", "band__inner");
 
     var p = SITE.profile;
+
+    if (p.avatar && p.avatar.show && p.avatar.src) {
+      var photo = el("img", "avatar");
+      photo.src = p.avatar.src;
+      photo.alt = p.avatar.alt || "";
+      photo.width = 120;
+      photo.height = 120;
+      photo.decoding = "async";
+      // Sans la photo, on ne laisse pas un cadre vide.
+      photo.addEventListener("error", function () {
+        photo.remove();
+      });
+      inner.appendChild(photo);
+    }
+
     if (p.status && p.status.show) {
       var pill = el("p", "status");
       var dot = el("span", "status__dot");
@@ -495,26 +555,18 @@ const SITE = {
 
     node.appendChild(el("p", "card__desc", item.description));
 
-    var foot = el("div", "card__foot");
-    foot.appendChild(el("span", "tag", item.tag || "Projet"));
-    if (href && !many) {
-      var arrow = el("span", "card__arrow", "↗");
-      arrow.setAttribute("aria-hidden", "true");
-      foot.appendChild(arrow);
-    } else if (!many) {
-      foot.appendChild(el("span", "tag", "Bientôt"));
-    }
-    node.appendChild(foot);
-
     if (many) {
-      var row = el("div", "card__links");
-      item.links.forEach(function (entry) {
-        var pill = el("a", "pill", entry.label);
-        link(pill, entry.href);
-        pill.setAttribute("aria-label", entry.label + " — " + item.title);
-        row.appendChild(pill);
-      });
-      node.appendChild(row);
+      node.appendChild(linkRow(item.links, item.title));
+    } else {
+      var foot = el("div", "card__foot");
+      if (href) {
+        var arrow = el("span", "card__arrow", "↗");
+        arrow.setAttribute("aria-hidden", "true");
+        foot.appendChild(arrow);
+      } else {
+        foot.appendChild(el("span", "tag", "Bientôt"));
+      }
+      node.appendChild(foot);
     }
 
     return node;
@@ -616,80 +668,47 @@ const SITE = {
     mount.appendChild(inner);
   }
 
-  function workTile(item) {
-    var figure = el("figure", "work");
+  /** Une carte artiste : son nom, ce qu'on fait ensemble, ses chaînes. */
+  function artistCard(item) {
+    var node = el("div", "card card--" + (item.color || "mist"));
 
-    if (item.kind === "youtube" && item.videoId) {
-      var frame = el("div", "work__media");
-      var iframe = document.createElement("iframe");
-      // youtube-nocookie : aucun cookie publicitaire posé avant lecture.
-      iframe.src =
-        "https://www.youtube-nocookie.com/embed/" + encodeURIComponent(item.videoId) + "?rel=0";
-      iframe.title = item.title || "Vidéo";
-      iframe.loading = "lazy";
-      iframe.allow = "accelerometer; clipboard-write; encrypted-media; picture-in-picture";
-      iframe.allowFullscreen = true;
-      iframe.setAttribute("referrerpolicy", "strict-origin-when-cross-origin");
-      frame.appendChild(iframe);
-      figure.appendChild(frame);
-    } else if (item.kind === "instagram" && item.href) {
-      var a = el("a", "work__media work__media--vertical");
-      link(a, item.href);
-      if (item.thumb) {
-        var img = el("img");
-        img.src = item.thumb;
-        img.alt = item.title || "";
-        img.loading = "lazy";
-        img.style.cssText = "width:100%;height:100%;object-fit:cover";
-        img.addEventListener("error", function () {
-          img.remove();
-          a.classList.add("work__empty");
-        });
-        a.appendChild(img);
-      } else {
-        a.classList.add("work__empty");
-      }
-      a.appendChild(el("span", "work__badge", "Voir sur Instagram"));
-      figure.appendChild(a);
-    } else {
-      var slot = el("div", "work__media work__empty");
-      slot.appendChild(el("span", null, "Emplacement libre"));
-      figure.appendChild(slot);
+    if (item.image) {
+      var frame = el("div", "artist__image");
+      var img = el("img");
+      img.src = item.image;
+      img.alt = "";
+      img.loading = "lazy";
+      img.decoding = "async";
+      img.addEventListener("error", function () {
+        frame.remove();
+      });
+      frame.appendChild(img);
+      node.appendChild(frame);
     }
 
-    var caption = el("figcaption");
-    if (item.title) caption.appendChild(el("span", "work__title", item.title));
-    if (item.caption) {
-      caption.appendChild(document.createElement("br"));
-      caption.appendChild(el("span", "work__meta", item.caption));
-    }
-    figure.appendChild(caption);
-    return figure;
+    node.appendChild(el("h3", "card__title", item.name));
+    if (item.note) node.appendChild(el("p", "card__desc", item.note));
+    if (item.links) node.appendChild(linkRow(item.links, item.name));
+    return node;
   }
 
-  function renderWorks() {
+  function renderArtists() {
     var mount = document.getElementById("works");
-    if (!mount) return;
-    var W = SITE.montage.works;
+    if (!mount || !SITE.montage.artists) return;
+    var A = SITE.montage.artists;
     mount.className = "band band--concrete";
 
     var inner = el("div", "band__inner");
     var head = el("div");
     head.style.marginBottom = "var(--s-10)";
-    head.appendChild(el("h2", "heading", W.title));
-    if (W.intro) head.appendChild(el("p", "lede", W.intro));
+    head.appendChild(el("h2", "heading", A.title));
+    if (A.intro) head.appendChild(el("p", "lede", A.intro));
     inner.appendChild(head);
 
-    var grid = el("div", "works");
-    W.items
-      .filter(function (item) {
-        if (W.showEmptySlots !== false) return true;
-        return (item.kind === "youtube" && item.videoId) ||
-          (item.kind === "instagram" && item.href);
-      })
-      .forEach(function (item) {
-        grid.appendChild(workTile(item));
-      });
+    var grid = el("div", "grid grid--artists");
+    A.items.forEach(function (item) {
+      grid.appendChild(artistCard(item));
+    });
     inner.appendChild(grid);
     mount.appendChild(inner);
   }
@@ -777,7 +796,7 @@ const SITE = {
     } else if (page === "montage") {
       renderMontageHero();
       renderServices();
-      renderWorks();
+      renderArtists();
       renderContact();
     }
 

@@ -100,9 +100,9 @@ permanence ne veut plus rien dire.
 }
 ```
 
-**Un projet sans `href` reste affiché** : carte non cliquable, étiquette
+**Un projet sans lien reste affiché** : carte non cliquable, étiquette
 « Bientôt ». Ça a l'air voulu, alors qu'un lien mort a l'air cassé. Dès que
-tu colles une URL, la carte devient un lien, sans rien d'autre à toucher.
+tu ajoutes une URL, la carte devient cliquable, sans rien d'autre à toucher.
 
 `color` fait tourner les fonds dans la palette. Évite de mettre la même
 couleur sur deux cartes voisines : aucune teinte ne doit devenir « la »
@@ -112,27 +112,32 @@ Pour ajouter un logo : dépose un PNG carré dans `assets/logos/` (128 px
 suffit, les cartes l'affichent en 44 px) et mets son chemin dans `logo`. Si
 le fichier manque, le carré disparaît au lieu d'afficher une image cassée.
 
-### Les réalisations (page montage)
+### Les artistes (page montage)
 
-| `kind` | Ce qu'il faut remplir | Rendu |
-|---|---|---|
-| `"youtube"` | `videoId` | lecteur YouTube intégré |
-| `"instagram"` | `href`, et `thumb` si tu veux | vignette cliquable |
-| vide | rien | cadre gris « emplacement libre » |
+Pas de galerie de vidéos : les montages vivent sur les chaînes des artistes,
+c'est donc là qu'on envoie.
 
-L'identifiant d'une vidéo YouTube est ce qui suit `v=` dans son URL : dans
-`https://www.youtube.com/watch?v=aqz-KE-bpKQ`, c'est `aqz-KE-bpKQ`.
+```js
+{
+  name: "FuegoFeu",
+  note: "Clips et formats courts",
+  image: "assets/works/fuego-cash-crime.jpg",  // facultatif
+  color: "sun",
+  links: [
+    { label: "YouTube", href: "https://www.youtube.com/@fuegofeu", primary: true },
+    { icon: "instagram", href: "https://www.instagram.com/fuego.feu/" },
+  ],
+}
+```
 
-Instagram n'autorise pas l'intégration sans charger ses scripts de suivi : on
-affiche donc une vignette cliquable, sans tracker.
-
-**Avant d'envoyer le lien à un client**, passe `showEmptySlots` à `false`
-dans `montage.works` : les cadres vides disparaissent.
+L'image est facultative : sans elle, la carte reste une carte, et elle ne
+s'étire pas pour rattraper sa voisine.
 
 ### L'adresse de contact
 
 `montage.contact.email.address` est publique : elle est lisible dans le code
-source de la page, comme toute adresse en `mailto:`. À côté du bouton mail,
+source de la page, comme toute adresse en `mailto:`. Elle apparaît aussi dans
+le bandeau défilant (`marquee`) — change les deux ensemble. À côté du bouton mail,
 un bouton **« Copier l'adresse »** — utile sur mobile, où `mailto:` ouvre
 parfois une application que personne n'utilise.
 
