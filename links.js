@@ -107,6 +107,7 @@ const SITE = {
         color: "sun",
         links: [
           { label: "App Store", href: "https://apps.apple.com/fr/app/mention/id6813231243", primary: true },
+          { label: "mention-notes.vercel.app", href: "https://mention-notes.vercel.app/" },
         ],
       },
       {
