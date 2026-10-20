@@ -83,11 +83,17 @@ const SITE = {
     items: [
       {
         title: "Kura",
-        description: "Découverte sociale par affinités culturelles : cinéma et musique.",
+        description: "Découverte sociale par affinités culturelles : cinéma et musique. Sur l'App Store.",
         tag: "iOS · SwiftUI",
         logo: "assets/logos/kura.png",
         color: "lavender",
-        href: "https://thekura.netlify.app/",
+        // Plusieurs liens : la carte cesse d'être un lien et affiche une
+        // rangée de pilules. Un lien dans un lien n'est pas du HTML valide.
+        links: [
+          { label: "thekura.app", href: "https://thekura.app" },
+          { label: "App Store", href: "https://apps.apple.com/fr/app/id6811449545" },
+          { label: "Instagram", href: "https://www.instagram.com/thekura.app/" },
+        ],
       },
       {
         title: "TerraTrails",
@@ -107,11 +113,11 @@ const SITE = {
       },
       {
         title: "Mention",
-        description: "Moyennes, paliers et projections : la mention que tu peux viser, calculée à l'avance.",
+        description: "Moyennes, paliers et projections : la mention que tu peux viser, calculée à l'avance. Sur l'App Store.",
         tag: "iOS",
         logo: "assets/logos/mention.png",
         color: "sun",
-        href: "", // TODO
+        href: "https://apps.apple.com/fr/app/mention/id6813231243",
       },
       {
         title: "Manifest",
@@ -197,10 +203,15 @@ const SITE = {
       intro: "Une sélection. Le reste est sur mes réseaux.",
       showEmptySlots: true,
       items: [
-        { kind: "youtube", videoId: "", title: "Fuego", caption: "Clip · 2026" },           // TODO : videoId
-        { kind: "youtube", videoId: "", title: "Used2that", caption: "Clip · 2026" },       // TODO
-        { kind: "instagram", href: "https://www.instagram.com/4restdump_/", thumb: "", title: "Cash Crime", caption: "Format vertical · 2026" }, // TODO
-        { kind: "instagram", href: "https://www.instagram.com/4restdump_/", thumb: "", title: "Zenology", caption: "Format vertical · 2026" },   // TODO
+        {
+          kind: "instagram",
+          href: "https://www.instagram.com/reel/DeguuDvIl0-/",
+          thumb: "assets/works/fuego-cash-crime.jpg",
+          title: "Fuego × Cash Crime",
+          caption: "Clip — Rentre dans le Cercle (BTS) · 2026",
+        },
+        { kind: "youtube", videoId: "", title: "Fuego", caption: "Clip · 2026" },     // TODO : videoId
+        { kind: "youtube", videoId: "", title: "Used2that", caption: "Clip · 2026" }, // TODO : videoId
       ],
     },
 
@@ -456,9 +467,12 @@ const SITE = {
 
   function projectCard(item) {
     var href = item.href || "";
-    var node = el(href ? "a" : "div", "card card--" + (item.color || "mist"));
-    if (href) link(node, href);
-    else node.classList.add("card--soon");
+    var many = item.links && item.links.length;
+    // Une carte à plusieurs liens ne peut pas être elle-même un lien : on la
+    // laisse en <div> et les pilules du pied portent les destinations.
+    var node = el(href && !many ? "a" : "div", "card card--" + (item.color || "mist"));
+    if (href && !many) link(node, href);
+    else if (!many) node.classList.add("card--soon");
 
     var head = el("div", "card__head");
     if (item.logo) {
@@ -483,14 +497,25 @@ const SITE = {
 
     var foot = el("div", "card__foot");
     foot.appendChild(el("span", "tag", item.tag || "Projet"));
-    if (href) {
+    if (href && !many) {
       var arrow = el("span", "card__arrow", "↗");
       arrow.setAttribute("aria-hidden", "true");
       foot.appendChild(arrow);
-    } else {
+    } else if (!many) {
       foot.appendChild(el("span", "tag", "Bientôt"));
     }
     node.appendChild(foot);
+
+    if (many) {
+      var row = el("div", "card__links");
+      item.links.forEach(function (entry) {
+        var pill = el("a", "pill", entry.label);
+        link(pill, entry.href);
+        pill.setAttribute("aria-label", entry.label + " — " + item.title);
+        row.appendChild(pill);
+      });
+      node.appendChild(row);
+    }
 
     return node;
   }
