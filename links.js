@@ -96,7 +96,7 @@ const SITE = {
         // libellé par un logo : un réseau n'a pas besoin d'être écrit.
         links: [
           { label: "App Store", href: "https://apps.apple.com/fr/app/id6811449545", primary: true },
-          { label: "thekura.app", href: "https://thekura.app" },
+          { label: "Site web", href: "https://thekura.app" },
           { icon: "instagram", href: "https://www.instagram.com/thekura.app/" },
         ],
       },
@@ -107,7 +107,7 @@ const SITE = {
         color: "sun",
         links: [
           { label: "App Store", href: "https://apps.apple.com/fr/app/mention/id6813231243", primary: true },
-          { label: "Lien", href: "https://mention-notes.vercel.app/" },
+          { label: "Site web", href: "https://mention-notes.vercel.app/" },
         ],
       },
       {
@@ -116,7 +116,7 @@ const SITE = {
         logo: "assets/logos/terratrails.png",
         color: "mint",
         links: [
-          { label: "terratrails.vercel.app", href: "https://terratrails.vercel.app/", primary: true },
+          { label: "Site web", href: "https://terratrails.vercel.app/", primary: true },
           { icon: "instagram", href: "https://www.instagram.com/terratrails.fr/" },
         ],
       },
